@@ -23,7 +23,7 @@ cache = Cache(app, config={
     'CACHE_KEY_PREFIX': 'flcache',
     'CACHE_REDIS_HOST': 'localhost',
     'CACHE_REDIS_PORT': '6379',
-    'CACHE_REDIS_URL': 'redis://localhost:6379'
+    'CACHE_REDIS_URL': 'redis://:pass@localhost:6379',
 })
 
 # blogging
