@@ -3,7 +3,7 @@ import os.path as op
 # from flask import Flask
 # from flask import Blueprint, request, render_template
 from flask.ext.admin.contrib import sqla
-from app import db
+from app import db, cache
 from app.users.models import User, Role
 from flask import flash, g, session, redirect, url_for
 from flask.ext.admin.contrib.sqla import ModelView
@@ -48,6 +48,7 @@ from .forms import *
 
 class MyAdminIndexView(admin.AdminIndexView):
     @expose('/')
+    @cache.memoize(timeout=60)
     @admin_per.require(http_exception=403)
     def index(self):
         if not login.current_user.is_authenticated():
