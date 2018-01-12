@@ -175,6 +175,8 @@ def add_item(path, data):
     items_model = get_model_by_path(path)
     item = items_model()
     set_attrs_to_item(item, data)
+    if path == "equipment" or path == "contract" or path == "campaign":
+        item.group_id = login.current_user.group_id
     try:
         db.session.add(item)
         db.session.commit()
@@ -222,8 +224,12 @@ def get_items(path, args):
         if 'search_all' in kwargs:
             search_value = kwargs.pop('search_all')
             return [item.serialize() for item in build_seach_equipment_query(items_model, search_value)]
-
+        
         return [item.serialize() for item in db.session.query(items_model).filter_by(**kwargs)]
+    
+    if path == "location" or path == "assigned_to" or path == "user" or path == "contract" or path == "equipment":
+        return [item.serialize() for item in db.session.query(items_model).filter(items_model.group_id==login.current_user.group_id).all()]
+
     return [item.serialize() for item in db.session.query(items_model).all()]
 
 
@@ -237,6 +243,7 @@ def build_seach_equipment_query(items_model, search_value):
         .outerjoin(items_model.equipment)\
         .outerjoin(items_model.campaign)\
         .outerjoin(Campaign.created_by)\
+        .filter(Campaign.group_id == login.current_user.group_id)\
         .filter(or_(
             cast(TestResult.date_analyse, String).ilike("%{}%".format(search_value)),
             cast(TestResult.id, String).ilike("%{}%".format(search_value)),
@@ -981,7 +988,7 @@ def finish_campaign_handler(item_id):
     item = db.session.query(Campaign).get(item_id)
     test_results = db.session.query(TestResult).filter(Campaign.id == item_id).all()
     email_recipients = [test_result.performed_by.email for test_result in test_results if test_result.performed_by]
-    email_recipients.extend([item.created_by.email, g.user.email])
+    email_recipients.extend([item.created_by.email, g.user.email]) # to_check
     send_email(email_recipients,
                generate_message(path, item),
                'Vision - Campaign setup finished #{:%m/%d/%Y %I:%M %p}'.format(item.date_created))
@@ -1008,7 +1015,7 @@ def get_campaigns_handler():
             filter_clause = func.concat(items_model.date_created, ' ', items_model.description).like('%{}%'.format(search_val))
             if last_id:
                 filter_clause = and_(filter_clause, items_model.id > last_id)
-        query = db.session.query(items_model)
+        query = db.session.query(items_model).filter(items_model.group_id == login.current_user.group_id)
         if filter_clause is not None:
             query = query.filter(filter_clause)
         total_count = query.filter_by(**kwargs).count()
@@ -1041,12 +1048,26 @@ def generate_pdf(id):
     r = requests.post('http://wkhtml:5001/', data = {'html' : url ,'auth' : auth, 'pdfId' : request.args.get('pdfId')})
     return return_json('result', 1)
 
-# Get release version
+# Check if PDF is generated
 @api_blueprint.route('/check_pdf/<pdfId>', methods=['GET'])
 @login_required
 def check_pdf(pdfId):
     if os.path.isfile(api.config['EQUIPMENT_REPORT_DIR'] + pdfId + ".pdf"):
         return return_json('result', 1)
+    return return_json('result', 0)
+
+import base64
+# Invite one user
+@api_blueprint.route('/invite_user/', methods=['POST'])
+@login_required
+def invite_user():
+
+    group_id = base64.b64encode("group|{}".format(g.user.group_id))
+    link = "http://{}/group/register?group={}".format(api.config['HOST'], group_id)
+
+    email_message = "Dear {}. You have been invited to join Vision. Please follow this link to complete registration {}".format(request.json['name'], link)
+    print email_message
+    send_email([request.json['email']], email_message, 'Vision - invitation')
     return return_json('result', 0)
 
 

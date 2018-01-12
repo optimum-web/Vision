@@ -40,6 +40,7 @@
 				<li><a href="{{ url_for('admin.index') }}" title="{{ current_user.name|striptags|title }}'s dashboard">{{ _('Dashboard') }}</a></li>
 				<li><a href="{{ url_for('users.logout') }}"><span class="glyphicon glyphicon-log-out"></span>&nbsp;{{ _('Logout') }}</a></li>
 				{% else %}
+				<li><a href="{{ url_for('group.register') }}">{{ _('Company Register') }}</a></li>
 				<li><a href="{{ url_for('users.register') }}">{{ _('Register') }}</a></li>
 				<li><a href="{{ url_for('users.login') }}">{{ _('Login') }}</a></li>
 				{% endif %}

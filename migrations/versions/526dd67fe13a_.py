@@ -17,7 +17,7 @@ import sqlalchemy as sa
 def upgrade():
     sql = """
     UPDATE public.pages_translation
-   SET  text='## Welcome to Vision Diagnostic for Fluid Insulated Equipment. <a href=\"https://github.com/SnowBeaver/Vision\" target=\"_blank\"  style=\"float:right; color:#000; font-size:44px\"><i class=\"fa fa-github\" aria-hidden=\"true\"></i></a>
+   SET  text='## Welcome to Vision Diagnostic for Fluid Insulated Equipment. <a href="https://github.com/SnowBeaver/Vision" target="_blank"  style="float:right; color:#000; font-size:44px"><i class="fa fa-github" aria-hidden="true"></i></a>
 
 ### Introduction
 

@@ -79,7 +79,7 @@
           s.parentNode.insertBefore(wf, s);
         })();
     </script>
-  {% if user_is_admin %}
+  {% if user_is_admin or user_is_group_admin or user_is_group_user %}
     <script src="{{ url_for('static', filename='build/app.js') }}"></script>
   {% else %}
     <script src="{{ url_for('static', filename='build/performer.js') }}"></script>

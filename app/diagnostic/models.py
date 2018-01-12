@@ -183,6 +183,7 @@ class Contract(db.Model):
         db.ForeignKey("contract_status.id"),
         nullable=False
     )
+    group_id = db.Column(db.Integer())
 
     def __repr__(self):
         return self.name
@@ -192,7 +193,8 @@ class Contract(db.Model):
         return {'id': self.id,
                 'name': self.name,
                 'code': self.code,
-                'contract_status_id': self.contract_status_id
+                'contract_status_id': self.contract_status_id,
+                'group_id': self.group_id
                 }
 
 
@@ -246,6 +248,7 @@ class Campaign(db.Model):
     description = db.Column(db.Text)
     status_id = db.Column(db.ForeignKey("campaign_status.id"), nullable=True)
     status = db.relationship('CampaignStatus', foreign_keys='Campaign.status_id')
+    group_id = db.Column(db.Integer())
 
     #
     # # Bolean field that may no longer be required
@@ -287,6 +290,7 @@ class Campaign(db.Model):
             'status_id': self.status_id,
             'status': self.status and self.status.serialize(),
             'description': self.description,
+            'group_id': self.group_id,
 
             # 'if_rem': self.if_rem,
             # 'if_ok': self.if_ok,
@@ -490,6 +494,7 @@ class Location(db.Model):
     # Example. A company may have a assembly plants in several cities,
     # therefore each site is named after each city where the plant is.
     name = db.Column(db.String(50), index=True)  # should be relation
+    group_id = db.Column(db.Integer())
 
     children = relationship("Equipment")
 
@@ -500,7 +505,8 @@ class Location(db.Model):
         """Return object data in easily serializeable format"""
         params = {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'group_id': self.group_id
         }
         if tree_view:
             # costumed columns for TreeView
@@ -983,7 +989,7 @@ class Breaker(db.Model):
     __tablename__ = u'breaker'
 
     id = db.Column(db.Integer(), primary_key=True, nullable=False)
-    current_rating = db.Column(db.Numeric(6))
+    current_rating = db.Column(db.Float(6))
     open = db.Column(db.Boolean, default=True)
 
     fluid_type_id = db.Column('fluid_type_id', db.ForeignKey("fluid_type.id"), nullable=True)
@@ -1670,6 +1676,7 @@ class Equipment(db.Model):
     # Sibling. Unique Common Index with the other siblings.  If 0 then no sibling
     # id of a similar equipment
     sibling = db.Column(db.Integer)
+    group_id = db.Column(db.Integer())
 
     def __repr__(self):
         return unicode("{} {} {}".format(self.name.encode('utf-8') if self.name else '',
@@ -1753,6 +1760,7 @@ class Equipment(db.Model):
                 'prev_serial_number': self.prev_serial_number,
                 'prev_equipment_number': self.prev_equipment_number,
                 'sibling': self.sibling,
+                'group_id': self.group_id,
                 }
         if tree_view:
             # costumed columns for TreeView, ignore location field

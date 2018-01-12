@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block header %}
+<header></header>
+{% endblock %}
+{% block top %}
+{% endblock %}
+{% block rightcontent %}
+{% endblock %}
+{% block content %}
+<div class="register-form-container">
+	<div class="title-container title form-container container-background">
+		<div class="join-us">Register</div>
+	</div>
+	<div class="form-container arial container-background">
+		{% from "forms/macros.html" import render_field %}
+		<form class="form fs13" method="POST" action="">
+			{{ form.csrf_token }}
+			{% if not group_id %}
+			{{ render_field(form.group, class="input text") }}
+			{% endif %}
+			{{ render_field(form.name, class="input text") }}
+			{{ render_field(form.email, class="input text") }}
+			{{ render_field(form.password, class="input text") }}
+			{{ render_field(form.confirm, class="input text") }}
+			<p>
+			<div style="float:left">
+				I accept <a href="#" title="Terms of use" target="_blank">Terms of use</a>
+			</div>
+			<div class="float:left">
+				{{ form.accept_tos|safe }}
+				{% if form.accept_tos.errors %}
+				<ul class="errors">{% for error in form.accept_tos.errors %}<li>{{ error|e }}</li>{% endfor %}</ul>
+				{% endif %}
+			</div>
+			</p>
+			{#
+			<label>Human ?</label>
+			{{ form.recaptcha }}
+			#}
+			<input type="submit" value="Register" class="btn">
+		</form>
+	</div>
+</div>
+{% endblock %}
+{% block bottommenu %}
+{% endblock %}

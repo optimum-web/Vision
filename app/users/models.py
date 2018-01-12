@@ -1,5 +1,6 @@
 from app.users import constants as USER
 from app import db, app
+from app.group.models import Group
 from hashlib import md5
 from sqlalchemy import event, select, func
 from sqlalchemy.sql import text
@@ -91,6 +92,8 @@ class User(db.Model, UserMixin):
     updated = db.Column('updated', db.DateTime, default=datetime.datetime.now)
     country_id = db.Column(db.Integer, db.ForeignKey("country.id"))
     country = db.relationship('Country', backref='users_user')
+    group_id = db.Column(db.Integer, db.ForeignKey("groups.id"))
+    group = db.relationship('Group', backref='users_user')
 
     def __unicode__(self):
         return u"%s" % (self.name)
@@ -209,6 +212,8 @@ class User(db.Model, UserMixin):
                 'website': self.website,
                 'country_id': self.country_id,
                 'country': self.country and self.country.serialize(),
+                'group_id': self.group_id,
+                'group': self.group and self.group.serialize(),
                 'photo': self.photo,
                 'description': self.description,
                 'active': self.active,

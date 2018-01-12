@@ -10,6 +10,7 @@ from flask import jsonify
 from app.diagnostic.models import EquipmentType, Location, Transformer, AirCircuitBreaker, Bushing, \
     Capacitor, Breaker, PowerSource, Cable, SwitchGear, InductionMachine, SynchronousMachine, \
     LoadTapChanger, Rectifier, Tank, Switch, Inductance, NeutralResistance, GasSensor, Graph
+from flask.ext import admin, login
 
 import datetime
 
@@ -72,7 +73,7 @@ def get_tree():
 
 def get_owner_tree():
     """ Get tree which lists owners and equipment which belong to them """
-    locations = db.session.query(Location).options(joinedload_all('children')).all()
+    locations = db.session.query(Location).filter(Location.group_id==g.user.group_id).options(joinedload_all('children')).all()
     tree_nodes, generic_tree_nodes = get_tree_nodes()
     res = []
     for location in locations:
@@ -145,7 +146,7 @@ def add_owner_tree_data(location, tree_root, tree_main):
     if tree_root:
         location['location_id'] = location['id']
         location['icon'] = tree_root.icon
-        location['id'] = tree_main.id
+        location['id'] = location['id'] #tree_main.id
     return location
 
 

@@ -39,6 +39,8 @@ be_user = RoleNeed('user')
 be_guest = RoleNeed('quest')
 be_blogger = RoleNeed('blogger')
 be_performer = RoleNeed('performer')
+be_group_admin = RoleNeed('group_admin')
+be_group_user = RoleNeed('group_user')
 
 # Permissions
 guest_per = Permission(be_guest)
@@ -58,6 +60,10 @@ admin_per.description = "Admin's permissions"
 
 admin_or_performer_per = Permission(be_admin, be_performer)
 admin_or_performer_per.description = "Admin's or Performer's permissions"
+
+group_user_per = Permission(be_group_user)
+group_user_per.description = "Group User's permissions"
+
 
 apps_needs = [
     be_admin, be_user, be_guest, be_blogger, be_performer
@@ -133,10 +139,12 @@ security = Security(app, user_datastore)
 
 from app.home.views import mod as homeModule
 from app.users.views import mod as userModule
+from app.group.views import mod as groupModule
 from app.pages.views import mod as pageModule
 from app.tree.views import mod as treeModule
 app.register_blueprint(homeModule)
 app.register_blueprint(userModule)
+app.register_blueprint(groupModule)
 app.register_blueprint(pageModule)  # register page
 app.register_blueprint(treeModule) # register tree
 
@@ -144,6 +152,7 @@ from app.diagnostic.views import admin_views
 for view_class in admin_views:
     backend.add_view(view_class(db.session))
 backend.add_link(MenuLink(name='New Campaign', category='Campaign', url='/admin/#/campaign?equipment_ids=0'))
+backend.add_link(MenuLink(name='Invite user', category='Users', url='/admin/#/users/invite/'))
 
 # from diagnostic.api import api_blueprint
 # app.register_blueprint(api_blueprint)

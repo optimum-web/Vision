@@ -1045,8 +1045,12 @@ const EquipmentForm = React.createClass({
                     subform[field] = null;
                 }
             }
-            var id = subform.id;
-            delete subform.id;
+            if (subform.id){
+                var id = subform.id;
+                delete subform.id;
+            }
+            else
+                var id = "";
             return $.authorizedAjax({
                 url: '/api/v1.0/' + path + '/' + id,
                 type: 'POST',

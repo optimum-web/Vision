@@ -14,7 +14,7 @@ from flask.ext import admin, login
 from wtforms import form, fields, validators
 from flask import current_app
 from werkzeug.security import check_password_hash
-from app import admin_per, admin_or_performer_per
+from app import admin_per, admin_or_performer_per, group_user_per
 # from app import , user_per, guest_per, blogger_per
 from app.tree.storage import get_tree, get_switch_ids, get_owner_tree, get_equipment_type_to_url
 from app.tree.forms import TreeView
@@ -23,6 +23,18 @@ from jinja2 import Markup
 from flask_admin import BaseView
 from flask import jsonify
 from app.diagnostic.forms import *
+from flask.ext.admin.contrib.sqla.view import func
+from flask.ext.admin.contrib.sqla.ajax import QueryAjaxModelLoader
+
+class rolesAjaxLoader(QueryAjaxModelLoader):
+    def get_list(self, term, offset=0, limit=10):
+        filters = list(
+            field.ilike(u'%%%s%%' % term) for field in self._cached_fields
+        )
+        filters.append(Role.name != "admin")
+        filters.append(Role.name != "user")
+        query = db.session.query(self.model).filter(*filters).offset(offset).limit(limit)
+        return query.all()
 
 
 # Define login and registration forms (for flask-login)
@@ -49,7 +61,7 @@ from .forms import *
 class MyAdminIndexView(admin.AdminIndexView):
     @expose('/')
     #@cache.memoize(timeout=3600)
-    @admin_or_performer_per.require(http_exception=403)
+    #@group_user_per.require(http_exception=403)
     def index(self):
         if not login.current_user.is_authenticated():
             return redirect(url_for('.login_view'))
@@ -86,6 +98,8 @@ class MyAdminIndexView(admin.AdminIndexView):
         self._template_args['records_diagnosis'] = RecordsDiagnosticViewForm()
         self._template_args['equipment_diagnosis'] = EquipmentDiagnosisViewForm()
         self._template_args['user_is_admin'] = g.user.has_role(Role.query.get(1))
+        self._template_args['user_is_group_admin'] = g.user.has_role(Role.query.get(8))
+        self._template_args['user_is_group_user'] = g.user.has_role(Role.query.get(9))
         self._template_args['equipTypeToUrl'] = get_equipment_type_to_url()
         # self._template_args['diagnostic'] = popups
         # self._template_args['batch'] = BatchViewForm()
@@ -259,6 +273,11 @@ class UserAdmin(MyModelView):
         'created',
         'updated',
         'status',
+        'norm_isolation_data',
+        'norm_gas_data',
+        'norm_furan_data',
+        'norm_physic_data',
+        'norm_particles_data',
     )
     column_exclude_list = [
         'password',
@@ -282,6 +301,23 @@ class UserAdmin(MyModelView):
 
     column_searchable_list = ('alias', 'email', 'id')
     column_formatters = dict(_name=lambda v, c, m, p: m.name)
+    
+    form_ajax_refs = {
+        'roles': rolesAjaxLoader(
+            'roles',
+            db.session,
+            Role,
+            fields=['name'],
+            page_size=10
+        )
+    }
+    def get_query(self):
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+    
+    def get_count_query(self):
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
 
     def scaffold_form(self):
         form_class = super(UserAdmin, self).scaffold_form()
@@ -289,8 +325,19 @@ class UserAdmin(MyModelView):
         return form_class
 
     def __init__(self, dbsession):
-        super(UserAdmin, self).__init__(User, dbsession, name="User", category='CMS')
-
+        with app.app_context():
+            if login.current_user.has_role('admin'):
+                self.can_create = True
+                self.can_delete = True
+            else:
+                self.can_create = False
+                self.can_delete = False
+                self.form_excluded_columns = self.form_excluded_columns + ("group",)
+        super(UserAdmin, self).__init__(User, dbsession, name="Users", category='Users')
+    def is_accessible(self):
+        if login.current_user.is_authenticated():
+            return login.current_user.has_role('admin') or login.current_user.has_role('group_admin')
+        return False
 
 from sqlalchemy.event import listens_for
 from flask_admin.form import ImageUploadField, FileUploadField, thumbgen_filename

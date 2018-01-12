@@ -48,6 +48,7 @@ import GraphDetails from './GraphDetails';
 import ItemDetails from './ItemDetails';
 import EquipmentReport from './EquipmentReport';
 import EquipmentResults from './EquipmentResults';
+import UserInvite from './UserInvite';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 
@@ -275,6 +276,7 @@ render((
             <Route path="graph_details/:equipmentId/:date" component={GraphDetails}/>
             <Route path="equipment_report/:equipmentId" component={EquipmentReport}/>
             <Route path="equipment_results/:equipmentId" component={EquipmentResults}/>
+            <Route path="users/invite/" component={UserInvite}/>
             
             {/*This route should be the last, otherwise it will match all subsequent routes*/}
             <Route path=":equipmentId" component={Home}/>
