@@ -1396,7 +1396,7 @@ class TestScheduleView(MyModelView):
         )
     def is_accessible(self):
         if login.current_user.is_authenticated():
-            return login.current_user.has_role('admin') 
+            return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') 
         return False
 
 class TaskStatusView(MyModelView):
@@ -1626,6 +1626,12 @@ class TestRecommendationView(MySimpleView):
         'test_result': {'fields': (TestResult.remark,)},
         'recommendation': {'fields': (Recommendation.name,)},
     }
+
+    def get_query(self):
+        return self.session.query(self.model).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
+    
+    def get_count_query(self):
+        return self.session.query(func.count('*')).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
 
     def __init__(self, dbsession):
         super(TestRecommendationView, self).__init__(

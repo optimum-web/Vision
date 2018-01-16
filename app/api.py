@@ -227,8 +227,10 @@ def get_items(path, args):
         
         return [item.serialize() for item in db.session.query(items_model).filter_by(**kwargs)]
     
-    if path == "location" or path == "assigned_to" or path == "user" or path == "contract" or path == "equipment":
+    if path == "location" or path == "campaign" or path == "assigned_to" or path == "user" or path == "contract" or path == "equipment":
         return [item.serialize() for item in db.session.query(items_model).filter(items_model.group_id==login.current_user.group_id).all()]
+    if path == "test_recommendation" or path == "schedule":
+        return [item.serialize() for item in db.session.query(items_model).outerjoin(items_model.user).filter(User.group_id==login.current_user.group_id).all()]
 
     return [item.serialize() for item in db.session.query(items_model).all()]
 
