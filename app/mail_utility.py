@@ -16,7 +16,7 @@ DEBUG = app.config.get('DEBUG')
 
 def send_email(recipients, body, subject='News from Vision', sender=NOREPLY_EMAIL):
     """Send email"""
-    sg = sendgrid.SendGridAPIClient(apikey='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')
+    sg = sendgrid.SendGridAPIClient(apikey=app.config.get('SENDGRID_KEY'))
     from_email = Email(sender)
     content = Content("text/html", body)
     try:
