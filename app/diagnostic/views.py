@@ -32,6 +32,15 @@ class equipmentAjaxLoader(QueryAjaxModelLoader):
         query = db.session.query(self.model).filter(*filters).offset(offset).limit(limit)
         return query.all()
 
+class userAjaxLoader(QueryAjaxModelLoader):
+    def get_list(self, term, offset=0, limit=10):
+        filters = list(
+            field.ilike(u'%%%s%%' % term) for field in self._cached_fields
+        )
+        filters.append(User.group_id == g.user.group_id)
+        query = db.session.query(self.model).filter(*filters).offset(offset).limit(limit)
+        return query.all()
+
 
 class EquipmentView(MyModelView):
     """
@@ -274,7 +283,7 @@ class ManufacturerView(MyModelView):
         )
     def is_accessible(self):
         if login.current_user.is_authenticated():
-            return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
+            return login.current_user.has_role('admin')
         return False
 
 class FluidTypeView(MyModelView):
@@ -819,7 +828,7 @@ class LocationView(MyModelView):
     form_overrides = dict(
         group_id=HiddenField
     )
-
+    form_excluded_columns = ('children', 'equipment')
     def get_query(self):
       return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
     
@@ -871,7 +880,7 @@ class LabView(MyModelView):
         )
     def is_accessible(self):
         if login.current_user.is_authenticated():
-            return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
+            return login.current_user.has_role('admin')
         return False
 
 class CampaignView(MyModelView):
@@ -1207,7 +1216,7 @@ class MaterialView(MyModelView):
         )
     def is_accessible(self):
         if login.current_user.is_authenticated():
-            return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
+            return login.current_user.has_role('admin')
         return False
 
 class PowerSourceView(MyModelView):
@@ -1622,8 +1631,20 @@ class TestRecommendationView(MySimpleView):
     column_searchable_list = ()
 
     form_ajax_refs = {
-        'user': {'fields': (User.name,)},
-        'test_result': {'fields': (TestResult.remark,)},
+        'user': userAjaxLoader(
+            'user',
+            db.session,
+            User,
+            fields=['name'],
+            page_size=10
+        ),
+        'test_result': myQueryAjaxLoader(
+            'test_result',
+            db.session,
+            TestResult,
+            fields=['remark'],
+            page_size=10
+        ),
         'recommendation': {'fields': (Recommendation.name,)},
     }
 
@@ -2456,7 +2477,13 @@ class TestSamplingCardView(MySimpleView):
     column_searchable_list = ()
 
     form_ajax_refs = {
-        'test_result': {'fields': (TestResult.remark,)},
+        'test_result': myQueryAjaxLoader(
+            'test_result',
+            db.session,
+            TestResult,
+            fields=['remark'],
+            page_size=10
+        ),
     }
 
     def __init__(self, dbsession):

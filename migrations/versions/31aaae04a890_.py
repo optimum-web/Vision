@@ -35,6 +35,10 @@ def upgrade():
     UPDATE contract SET  group_id = 1;
     UPDATE users_user SET  group_id = 1;
     UPDATE location SET  group_id = 1;
+
+    insert into role (id, name, description) values (8, 'group_admin', 'group admin');
+    insert into role (id, name, description) values (9, 'group_user', 'group user');
+
     """
     op.execute(sql=sql)
     pass
