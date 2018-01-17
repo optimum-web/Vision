@@ -4,14 +4,36 @@ from flask_mail import Message
 from flask import g
 from app import app, mail
 
+import sendgrid
+from sendgrid.helpers.mail import *
 
 NOREPLY_EMAIL = app.config['NOREPLY_EMAIL']
 LOG_EMAIL = app.config.get('LOG_EMAIL', False)
 MAIL_SERVER = app.config.get('MAIL_SERVER')
 DEBUG = app.config.get('DEBUG')
-
+#ASDASDSDFSDGFDFGSERWER
+#
 
 def send_email(recipients, body, subject='News from Vision', sender=NOREPLY_EMAIL):
+    """Send email"""
+    sg = sendgrid.SendGridAPIClient(apikey='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')
+    from_email = Email(sender)
+    content = Content("text/html", body)
+    try:
+        for to in recipients:
+            to_email = Email(to)
+            mail = Mail(from_email, subject, to_email, content)
+            response = sg.client.mail.send.post(request_body=mail.get())
+    
+    except Exception as e:
+        app.logger.exception(e)
+        if DEBUG:
+            raise
+
+    if LOG_EMAIL:
+        app.logger.debug(response.status_code)
+
+def send_email_old(recipients, body, subject='News from Vision', sender=NOREPLY_EMAIL):
     """Send email"""
     msg = Message(subject=subject, sender=sender, body=body, recipients=recipients)
     try:
