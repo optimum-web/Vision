@@ -159,8 +159,9 @@ backend.add_link(MenuLink(name='Invite user', category='Users', url='/admin/#/us
 
 from app.admin.views import UserAdmin, RoleAdmin, FileView, ImageView, MenuView
 
-backend.add_view(UserAdmin(db.session))
-backend.add_view(RoleAdmin(db.session))
+with app.app_context():
+    backend.add_view(UserAdmin(db.session))
+#backend.add_view(RoleAdmin(db.session))
 
 #backend.add_view(FileView(db.session))
 #backend.add_view(ImageView(db.session))

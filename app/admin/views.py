@@ -267,7 +267,7 @@ class UserAdmin(MyModelView):
     """
     # Visible columns in the list view
     column_hide_backrefs = False
-    form_excluded_columns = (
+    form_excluded_columns = [
         'password',
         'confirmed_at',
         'created',
@@ -278,7 +278,7 @@ class UserAdmin(MyModelView):
         'norm_furan_data',
         'norm_physic_data',
         'norm_particles_data',
-    )
+    ]
     column_exclude_list = [
         'password',
         'confirmed_at',
@@ -314,10 +314,14 @@ class UserAdmin(MyModelView):
     def get_query(self):
         if login.current_user.has_role('group_admin'):
             return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(UserAdmin, self).get_query()
     
     def get_count_query(self):
         if login.current_user.has_role('group_admin'):
             return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(UserAdmin, self).get_count_query()
 
     def scaffold_form(self):
         form_class = super(UserAdmin, self).scaffold_form()
@@ -325,19 +329,27 @@ class UserAdmin(MyModelView):
         return form_class
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_delete = False
-                self.form_excluded_columns = self.form_excluded_columns + ("group",)
         super(UserAdmin, self).__init__(User, dbsession, name="Users", category='Users')
+
     def is_accessible(self):
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin')
         return False
+    @expose("/")
+    def index_view(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_delete = True
+            if "group" in self.form_excluded_columns:
+                self.form_excluded_columns.remove("group")
+                self.column_exclude_list.remove("group")
+        else:
+            self.can_create = False
+            self.can_delete = False
+            self.form_excluded_columns.append("group")
+            self.column_exclude_list.append("group")
+        self._refresh_cache()
+        return super(UserAdmin, self).index_view()
 
 from sqlalchemy.event import listens_for
 from flask_admin.form import ImageUploadField, FileUploadField, thumbgen_filename

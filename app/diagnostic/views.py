@@ -104,10 +104,16 @@ class EquipmentView(MyModelView):
     )
 
     def get_query(self):
-      return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(EquipmentView, self).get_query()
     
     def get_count_query(self):
-      return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(EquipmentView, self).get_count_query()
     
     def create_form(self):
         form = super(MyModelView, self).create_form()
@@ -320,24 +326,29 @@ class AirCircuitBreakerView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(AirCircuitBreakerView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(AirCircuitBreakerView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(AirCircuitBreakerView, self).__init__(
             AirCircuitBreaker, dbsession,
             name="Air circuit breaker", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -366,23 +377,28 @@ class BushingView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(BushingView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(BushingView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(BushingView, self).__init__(
             Bushing, dbsession, name="Bushing", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -395,23 +411,28 @@ class CableView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(CableView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(CableView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(CableView, self).__init__(
             Cable, dbsession, name="Cable", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -425,23 +446,28 @@ class CapacitorView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(CapacitorView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(CapacitorView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(CapacitorView, self).__init__(
             Capacitor, dbsession, name="Capacitor", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -461,23 +487,28 @@ class RectifierView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(RectifierView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(RectifierView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(RectifierView, self).__init__(
             Rectifier, dbsession, name="Rectifier", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -487,16 +518,29 @@ class InductanceView(MyModelView):
         'equipment': {'fields': (Equipment.name,)},
     }
     form_excluded_columns = ('equipment')
+    def get_query(self):
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(InductanceView, self).get_query()
+    
+    def get_count_query(self):
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(InductanceView, self).get_count_query()
+
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(InductanceView, self).__init__(
             Inductance, dbsession, name="Inductance", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -510,23 +554,29 @@ class NeutralResistanceView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(NeutralResistanceView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(NeutralResistanceView, self).get_count_query()
+          
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(NeutralResistanceView, self).__init__(
             NeutralResistance, dbsession, name="Neutral resistance", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -540,23 +590,28 @@ class TankView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(TankView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(TankView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(TankView, self).__init__(
             Tank, dbsession, name="Tank", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -570,23 +625,28 @@ class LoadTapChangerView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(LoadTapChangerView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(LoadTapChangerView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(LoadTapChangerView, self).__init__(
             LoadTapChanger, dbsession, name="Tap changer", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -600,23 +660,28 @@ class BreakerView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(BreakerView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(BreakerView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(BreakerView, self).__init__(
             Breaker, dbsession, name="Breaker", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -630,23 +695,28 @@ class SwitchView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SwitchView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SwitchView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(SwitchView, self).__init__(
             Switch, dbsession, name="Switch", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -660,12 +730,18 @@ class SwitchGearView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SwitchGearView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SwitchGearView, self).get_count_query()
 
     def __init__(self, dbsession):
         super(SwitchGearView, self).__init__(
@@ -685,24 +761,29 @@ class SynchronousMachineView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SynchronousMachineView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SynchronousMachineView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(SynchronousMachineView, self).__init__(
             SynchronousMachine, dbsession,
             name="Synchronous machine", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -716,24 +797,29 @@ class InductionMachineView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(InductionMachineView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(InductionMachineView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(InductionMachineView, self).__init__(
             InductionMachine, dbsession,
             name="Induction machine", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -749,23 +835,28 @@ class GasSensorView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(GasSensorView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(GasSensorView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(GasSensorView, self).__init__(
             GasSensor, dbsession, name="Gas sensor", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -793,23 +884,28 @@ class TransformerView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(TransformerView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(TransformerView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(TransformerView, self).__init__(
             Transformer, dbsession, name="Transformer", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -830,10 +926,17 @@ class LocationView(MyModelView):
     )
     form_excluded_columns = ('children', 'equipment')
     def get_query(self):
-      return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(LocationView, self).get_query()
     
     def get_count_query(self):
-      return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(LocationView, self).get_count_query()
+    
     
     def create_form(self):
         form = super(MyModelView, self).create_form()
@@ -956,10 +1059,16 @@ class CampaignView(MyModelView):
     )
 
     def get_query(self):
-      return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
-    
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(CampaignView, self).get_query()
+
     def get_count_query(self):
-      return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(CampaignView, self).get_count_query()
 
     def __init__(self, dbsession):
         super(CampaignView, self).__init__(
@@ -988,10 +1097,16 @@ class ContractView(MyModelView):
     )
 
     def get_query(self):
-      return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(ContractView, self).get_query()
     
     def get_count_query(self):
-      return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).filter(self.model.group_id==g.user.group_id)
+        else:
+            return super(ContractView, self).get_count_query()
     
     def create_form(self):
         form = super(MyModelView, self).create_form()
@@ -1118,27 +1233,32 @@ class TestResultView(MyModelView):
     }
     
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.campaign_id.in_(e_ids))
+        else:
+            return super(TestResultView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.campaign_id.in_(e_ids))
+        else:
+            return super(TestResultView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(TestResultView, self).__init__(
             TestResult, dbsession, name="Test result", category="Campaign"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -1232,23 +1352,28 @@ class PowerSourceView(MyModelView):
     }
     form_excluded_columns = ('equipment')
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(PowerSourceView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(PowerSourceView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(PowerSourceView, self).__init__(
             PowerSource, dbsession, name="Power source", category="Equipment"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -1545,12 +1670,18 @@ class EquipmentConnectionView(MySimpleView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(EquipmentConnectionView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(EquipmentConnectionView, self).get_count_query()
 
     def __init__(self, dbsession):
         super(EquipmentConnectionView, self).__init__(
@@ -1587,23 +1718,28 @@ class SiblingView(MySimpleView):
     }
     
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(self.model).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SiblingView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Equipment).filter(Equipment.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).filter(self.model.equipment_id.in_(e_ids))
+        else:
+            return super(SiblingView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(SiblingView, self).__init__(
             Sibling, dbsession, category="Equipment", name="Sibling"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -1649,10 +1785,16 @@ class TestRecommendationView(MySimpleView):
     }
 
     def get_query(self):
-        return self.session.query(self.model).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(self.model).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
+        else:
+            return super(TestRecommendationView, self).get_query()
     
     def get_count_query(self):
-        return self.session.query(func.count('*')).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
+        if login.current_user.has_role('group_admin'):
+            return self.session.query(func.count('*')).outerjoin(self.model.user).filter(User.group_id==g.user.group_id)
+        else:
+            return super(TestRecommendationView, self).get_count_query()
 
     def __init__(self, dbsession):
         super(TestRecommendationView, self).__init__(
@@ -1689,15 +1831,14 @@ class BreakerMechanismView(MySimpleTypesView):
     """
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-            else:
-                self.can_create = False
         super(BreakerMechanismView, self).__init__(
             BreakerMechanism, dbsession, name="Breaker mechanism"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+        else:
+            self.can_create = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') 
         return False
@@ -1953,12 +2094,18 @@ class BushingTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(BushingTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(BushingTestView, self).get_count_query()
 
     def __init__(self, dbsession):
         super(BushingTestView, self).__init__(
@@ -1985,27 +2132,32 @@ class WindingTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WindingTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WindingTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(WindingTestView, self).__init__(
             WindingTest, dbsession, name="Winding PF"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2020,27 +2172,32 @@ class VisualInspectionTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(VisualInspectionTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(VisualInspectionTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(VisualInspectionTestView, self).__init__(
             VisualInspectionTest, dbsession, name="Visual inspection test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2055,28 +2212,33 @@ class InsulationResistanceTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(InsulationResistanceTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(InsulationResistanceTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(InsulationResistanceTestView, self).__init__(
             InsulationResistanceTest, dbsession,
             name="Insulation resistance test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2091,28 +2253,33 @@ class PolymerisationDegreeTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(PolymerisationDegreeTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(PolymerisationDegreeTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(PolymerisationDegreeTestView, self).__init__(
             PolymerisationDegreeTest, dbsession,
             name="Polymerisation degree test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2127,28 +2294,33 @@ class TransformerTurnRatioTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(TransformerTurnRatioTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(TransformerTurnRatioTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(TransformerTurnRatioTestView, self).__init__(
             TransformerTurnRatioTest, dbsession,
             name="Transformer turn ratio test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2163,27 +2335,32 @@ class WindingResistanceTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WindingResistanceTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WindingResistanceTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(WindingResistanceTestView, self).__init__(
             WindingResistanceTest, dbsession, name="Winding resistance test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2198,27 +2375,32 @@ class DissolvedGasTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(DissolvedGasTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(DissolvedGasTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(DissolvedGasTestView, self).__init__(
             DissolvedGasTest, dbsession, name="Dissolved gas test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2233,27 +2415,32 @@ class WaterTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WaterTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(WaterTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(WaterTestView, self).__init__(
             WaterTest, dbsession, name="Water test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2268,27 +2455,32 @@ class FuranTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(FuranTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(FuranTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(FuranTestView, self).__init__(
             FuranTest, dbsession, name="Furan test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2303,27 +2495,32 @@ class InhibitorTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(InhibitorTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(InhibitorTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(InhibitorTestView, self).__init__(
             InhibitorTest, dbsession, name="Inhibitor test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2338,27 +2535,32 @@ class PCBTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(PCBTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(PCBTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(PCBTestView, self).__init__(
             PCBTest, dbsession, name="PCB test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2373,27 +2575,32 @@ class ParticleTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(ParticleTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(ParticleTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(ParticleTestView, self).__init__(
             ParticleTest, dbsession, name="Particle test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2408,27 +2615,32 @@ class MetalsInOilTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(MetalsInOilTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(MetalsInOilTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(MetalsInOilTestView, self).__init__(
             MetalsInOilTest, dbsession, name="Metals in oil test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
@@ -2443,27 +2655,32 @@ class FluidTestView(MyTestView):
     }
 
     def get_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(self.model).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(FluidTestView, self).get_query()
     
     def get_count_query(self):
-        e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
-        return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        if login.current_user.has_role('group_admin'):
+            e_ids = [item.id  for item in self.session.query(Campaign).filter(Campaign.group_id==g.user.group_id)]
+            return self.session.query(func.count('*')).join(self.model.test_result).filter(TestResult.campaign_id.in_(e_ids))
+        else:
+            return super(FluidTestView, self).get_count_query()
 
     def __init__(self, dbsession):
-        with app.app_context():
-            if login.current_user.has_role('admin'):
-                self.can_create = True
-                self.can_edit = True
-                self.can_delete = True
-            else:
-                self.can_create = False
-                self.can_edit = False
-                self.can_delete = False
         super(FluidTestView, self).__init__(
             FluidTest, dbsession, name="Fluid test"
         )
     def is_accessible(self):
+        if login.current_user.has_role('admin'):
+            self.can_create = True
+            self.can_edit = True
+            self.can_delete = True
+        else:
+            self.can_create = False
+            self.can_edit = False
+            self.can_delete = False
         if login.current_user.is_authenticated():
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False

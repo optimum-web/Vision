@@ -3,7 +3,7 @@ import md5
 import hashlib
 import base64
 from flask import Blueprint, request, render_template
-from flask import flash, g, session, redirect, url_for
+from flask import flash, g, session, redirect, url_for, Markup
 from flask import make_response
 from flask import current_app
 from flask_mail import Message
@@ -64,14 +64,13 @@ def register():
 
             if exists:
                 flash(
-                    gettext(
+                   Markup(
                         u'User with this e-mail was registered already.'
                         u' If you forgot your password click ' +
-                        u'<a href="%s">remind password</a>' % url_for(
-                            'users.forgot')
+                        u'<a href="/users/forgot-password">remind password</a>'
                     ))
                 # redirect user to the 'home' method of the user module.
-                return redirect(url_for('users.register'))
+                return redirect(url_for('group.register'))
         except Exception as e:
             current_app.logger.exception(e)
 
