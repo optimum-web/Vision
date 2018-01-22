@@ -50,3 +50,4 @@ pycrypto==2.6.1
 param==1.5.1
 ipython==5.4.1
 jupyter==1.0.0
+sendgrid
