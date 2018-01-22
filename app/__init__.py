@@ -153,6 +153,7 @@ for view_class in admin_views:
     backend.add_view(view_class(db.session))
 backend.add_link(MenuLink(name='New Campaign', category='Campaign', url='/admin/#/campaign?equipment_ids=0'))
 backend.add_link(MenuLink(name='Invite user', category='Users', url='/admin/#/users/invite/'))
+backend.add_link(MenuLink(name='Help', url='/wiki/start-guide',category='Help'))
 
 # from diagnostic.api import api_blueprint
 # app.register_blueprint(api_blueprint)
