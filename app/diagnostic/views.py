@@ -1072,7 +1072,7 @@ class CampaignView(MyModelView):
 
     def __init__(self, dbsession):
         super(CampaignView, self).__init__(
-            Campaign, dbsession, name="Campaign", category="Campaign",
+            Campaign, dbsession, name="Campaigns", category="Campaign",
         )
     def is_accessible(self):
         if login.current_user.is_authenticated():

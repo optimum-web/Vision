@@ -1500,10 +1500,10 @@ const EquipmentForm = React.createClass({
                             </div>
                             <FormGroup controlId="inputNameField"
                                        validationState={this.state.errors.name ? 'error' : null}>
-                                <ControlLabel>Name</ControlLabel>
+                                <ControlLabel>Equipment Name</ControlLabel>
                                 <span className="text-danger"> *</span>
                                 <FormControl type="text"
-                                             placeholder="Name"
+                                             placeholder="Equipment Name"
                                              name="name"
                                              required
                                              data-len="50"
@@ -1600,12 +1600,14 @@ const EquipmentForm = React.createClass({
                                     <FormGroup controlId="tapChangesTextarea" ref="nr_taps"
                                                validationState={this.state.errors.nbr_of_tap_change_ltc ? 'error' : null}>
                                         <ControlLabel>Nbr of Tap Changes LTC</ControlLabel>
+                                        <span className="text-danger"> *</span>
                                         <FormControl type="text"
                                                      name="nbr_of_tap_change_ltc"
                                                      placeholder="Tap changes"
                                                      ref="nr_taps"
                                                      value={this.state.nbr_of_tap_change_ltc ? this.state.nbr_of_tap_change_ltc : ""}
                                                      data-type="int"
+                                                     required
                                         />
                                         <HelpBlock
                                             className="warning">{this.state.errors.nbr_of_tap_change_ltc}</HelpBlock>
@@ -1618,12 +1620,14 @@ const EquipmentForm = React.createClass({
                                     <FormGroup controlId="physPositionInput"
                                                validationState={this.state.errors.phys_position ? 'error' : null}>
                                         <ControlLabel>Physical Position</ControlLabel>
+                                        <span className="text-danger"> *</span>
                                         <FormControl type="text"
                                                      placeholder="Physical position"
                                                      ref="phys_position"
                                                      name="phys_position"
                                                      value={this.state.phys_position ? this.state.phys_position : ""}
                                                      data-type="int"
+                                                     required
                                         />
                                         <HelpBlock className="warning">{this.state.errors.phys_position}</HelpBlock>
                                         <FormControl.Feedback />
@@ -1637,12 +1641,14 @@ const EquipmentForm = React.createClass({
                                     <FormGroup controlId="tensionInput"
                                                validationState={this.state.errors.tension4 ? 'error' : null}>
                                         <ControlLabel>Tension</ControlLabel>
+                                        <span className="text-danger"> *</span>
                                         <FormControl type="text"
                                                      name="tension4"
                                                      placeholder="Tension"
                                                      ref="tension4"
                                                      value={this.state.tension4 ? this.state.tension4 : ""}
                                                      data-type="float"
+                                                     required
                                         />
                                         <HelpBlock className="warning">{this.state.errors.tension4}</HelpBlock>
                                         <FormControl.Feedback />
