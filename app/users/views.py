@@ -78,7 +78,7 @@ def confirm(token):
         db.session.commit()
         flash(gettext(u'You have confirmed your account. Thanks!'), 'success')
 
-    return redirect(url_for('users.home'))
+    return redirect("/admin") #url_for('users.home')
 
 
 def generate_confirmation_token(email):
@@ -134,7 +134,7 @@ def send_confirmation():
     html += "<br><br>Team."
  
  
-    if current_app.config['SEND_EMAILS'] == True:
+    if current_app.config['SEND_EMAILS'] == "1":
         #mail.send(msg)
         send_email([g.user.get_email()], html, u"Please confirm your account at vision website")
 
