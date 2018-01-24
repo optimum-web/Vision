@@ -126,16 +126,17 @@ def send_confirmation():
     msg.body += "\nThank you,"
     msg.body += "\n\nTeam."
 
-    msg.html = "Hi, Welcome"
-    msg.html += "<br><br>Please confirm your account by clicking this link:"
-    msg.html += "\n%s" % conflnk_html
-    msg.html += "<br>Future notifications will be sent to this email address."
-    msg.html += "<br>Thank you,"
-    msg.html += "<br><br>Team."
+    html = "Hi, Welcome"
+    html += "<br><br>Please confirm your account by clicking this link:"
+    html += "\n%s" % conflnk_html
+    html += "<br>Future notifications will be sent to this email address."
+    html += "<br>Thank you,"
+    html += "<br><br>Team."
  
  
     if current_app.config['SEND_EMAILS'] == True:
-        mail.send(msg)
+        #mail.send(msg)
+        send_email([g.user.get_email()], html, u"Please confirm your account at vision website")
 
 
 # @mod.route('/forgot-password', methods=['GET', 'POST'])
@@ -368,3 +369,8 @@ def change_password():
         return redirect(url_for("users.home"))
 
     return dict(form=form, user=user)
+
+@mod.route("/invite/", methods=[ 'POST'])
+def invite_user():
+    user = User.query.get(session['user_id'])
+    return dict(user=user)
