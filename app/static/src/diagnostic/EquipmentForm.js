@@ -1410,16 +1410,7 @@ const EquipmentForm = React.createClass({
                                     >New</a>
                                 </div>
                             </div>
-                            <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
-                                    <EqAdditionalParams
-                                        data={this.state}
-                                        edited={(this.state.subform && Object.keys(this.state.subform).length > 0) ? true : false}
-                                        equipment_item={this.state.equipment_item}
-                                        ref="EqAdditionalParams"
-                                        />
-                                </div>
-                            </div>
+                            
                             <div className="row">
                                 <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
                                     <ManufacturerSelectField
@@ -1655,7 +1646,16 @@ const EquipmentForm = React.createClass({
                                     </FormGroup>
                                 </div>
                             </div>
-
+                            <div className="row">
+                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
+                                    <EqAdditionalParams
+                                        data={this.state}
+                                        edited={(this.state.subform && Object.keys(this.state.subform).length > 0) ? true : false}
+                                        equipment_item={this.state.equipment_item}
+                                        ref="EqAdditionalParams"
+                                        />
+                                </div>
+                            </div>
                             <div className="row">
                                 <div className="col-md-12">
                                     <Button bsStyle="success" type="submit" className="pull-right">Save</Button>
