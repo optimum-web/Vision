@@ -629,7 +629,7 @@ class Transformer(db.Model):
     windings = db.Column(db.Integer)  # Windings. Number of windings in transformer
     cooling_rating = db.Column(db.Integer)
     autotransformer = db.Column(db.Boolean)  # Autotransformer. True if it is
-    threephase = db.Column(db.Boolean)
+    #threephase = db.Column(db.Boolean)
 
     # # FluidType. Insulating fluid used in equipment
     # fluid_type_id = db.Column('fluid_type_id', db.ForeignKey("fluid_type.id"), nullable=False)
@@ -664,11 +664,9 @@ class Transformer(db.Model):
     tertiary_winding_connection = db.Column(db.Integer)
 
     # winding metal is a property of winding
-    winding_metal1 = db.Column(db.Integer)  # WindingMetal. Copper or aluminium
-    winding_metal2 = db.Column(db.Integer)  # in transformer delete winding_metal and add winding_metal2
-    winding_metal3 = db.Column(db.Integer)  # in transformer delete winding_metal and add winding_metal3
-    winding_metal4 = db.Column(db.Integer)  # in transformer delete winding_metal and add winding_metal4
-
+    winding_metal1 = db.Column(db.String(30))  # WindingMetal. Copper or aluminium
+    winding_metal2 = db.Column(db.String(30))  # in transformer delete winding_metal and add winding_metal2
+    
     bil1 = db.Column(db.Float(53))  # BIL1. Primary Insulation level in kV
     bil2 = db.Column(db.Float(53))  # BIL2. Secondary Insulation level in kV
     bil3 = db.Column(db.Float(53))  # BIL3. Tertiary Insulation level in kV
@@ -846,7 +844,7 @@ class Transformer(db.Model):
             'windings': self.windings,
             'cooling_rating': self.cooling_rating,
             'autotransformer': self.autotransformer,
-            'threephase': self.threephase,
+            #'threephase': self.threephase,
             # Comment these fields out as they were commented out much more before
             # See model fields upper
             # 'fluid_type_id': self.fluid_type_id,
@@ -868,8 +866,6 @@ class Transformer(db.Model):
             'tertiary_winding_connection': self.tertiary_winding_connection,
             'winding_metal1': self.winding_metal1,
             'winding_metal2': self.winding_metal2,
-            'winding_metal3': self.winding_metal3,
-            'winding_metal4': self.winding_metal4,
             'bil1': self.bil1,
             'bil2': self.bil2,
             'bil3': self.bil3,
@@ -959,7 +955,7 @@ class Transformer(db.Model):
                 ('mvaforced12', self.mvaforced12),
                 ('primary_tension', self.primary_tension),
                 ('secondary_tension', self.secondary_tension),
-                ('threephase', self.threephase),
+                #('threephase', self.threephase),
                 ('autotransformer', self.autotransformer),
                 ('bil1', self.bil1),
                 ('temperature_rise', self.temperature_rise),
@@ -969,8 +965,6 @@ class Transformer(db.Model):
                 ('sealed', self.sealed),
                 ('winding_metal1', self.winding_metal1),
                 ('winding_metal2', self.winding_metal2),
-                ('winding_metal3', self.winding_metal3),
-                ('winding_metal4', self.winding_metal4),
                 ('ltc1', self.ltc1),
                 ('ltc2', self.ltc2),
                 ('ltc3', self.ltc3),
@@ -1064,7 +1058,7 @@ class LoadTapChanger(db.Model):
             'id': self.id,
             'filter': self.filter,
             'counter': self.counter,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'number_of_taps': self.number_of_taps,
             'model': self.model,
             'tap_set': self.tap_set,
@@ -1152,7 +1146,7 @@ class Bushing(db.Model):
                 'sealed': self.sealed,
                 'current_rating': self.current_rating,
                 'fluid_volume': self.fluid_volume,
-                'bil': self.bil,
+                'bil': float(self.bil),
                 'c1': self.c1,
                 'c1pf': self.c1pf,
                 'c2': self.c2,
@@ -1265,7 +1259,7 @@ class NeutralResistance(db.Model):
                 'neutral_resistance_open2': self.neutral_resistance_open2,
                 'neutral_resistance_open3': self.neutral_resistance_open3,
                 'kv': self.kv,
-                'bil': self.bil,
+                'bil': float(self.bil),
                 'open': self.open,
                 'equipment_id': self.equipment_id,
                 }
@@ -1286,7 +1280,7 @@ class AirCircuitBreaker(db.Model):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'equipment_id': self.equipment_id,
         }
 
@@ -1311,8 +1305,8 @@ class Capacitor(db.Model):
             'id': self.id,
             'kv': self.kv,
             'kvar': self.kvar,
-            'bil': self.bil,
-            'current_rating': self.current_rating,
+            'bil': float(self.bil),
+            'current_rating': float(self.current_rating),
             'equipment_id': self.equipment_id,
         }
 
@@ -1357,7 +1351,7 @@ class SwitchGear(db.Model):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'insulation_id': self.insulation_id,
             'insulation': self.insulation,
             'equipment_id': self.equipment_id,
@@ -1382,7 +1376,7 @@ class InductionMachine(db.Model):
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {'id': self.id,
-                'current_rating': self.current_rating,
+                'current_rating': float(self.current_rating),
                 'hp': self.hp,
                 'kva': self.kva,
                 'pf': self.pf,
@@ -1408,7 +1402,7 @@ class SynchronousMachine(db.Model):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'hp': self.hp,
             'kw': self.kw,
             'equipment_id': self.equipment_id,
@@ -1556,7 +1550,7 @@ class Switch(db.Model):
         """Return object data in easily serializeable format"""
         return {
             'id': self.id,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'threephase': self.threephase,
             'open': self.open,
             'interrupting_medium_id': self.interrupting_medium_id,
@@ -1588,7 +1582,7 @@ class Cable(db.Model):
         return {
             'id': self.id,
             'model': self.model,
-            'current_rating': self.current_rating,
+            'current_rating': float(self.current_rating),
             'sealed': self.sealed,
             'threephase': self.threephase,
             'insulation_id': self.insulation_id,
@@ -3183,11 +3177,11 @@ class PolymerisationDegreeTest(db.Model):
                 'phase_c1': self.phase_c1,
                 'phase_c2': self.phase_c2,
                 'phase_c3': self.phase_c3,
-                'lead_a': self.lead_a,
-                'lead_b': self.lead_b,
-                'lead_c': self.lead_c,
-                'lead_n': self.lead_n,
-                'winding': self.winding,
+                'lead_a': float(self.lead_a),
+                'lead_b': float(self.lead_b),
+                'lead_c': float(self.lead_c),
+                'lead_n': float(self.lead_n),
+                'winding': float(self.winding),
                 }
 
 

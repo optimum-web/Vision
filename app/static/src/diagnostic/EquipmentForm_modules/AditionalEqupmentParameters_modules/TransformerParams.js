@@ -80,6 +80,9 @@ var SelectField = React.createClass({
         var error = this.props.errors[name];
         var required = this.props.required ? this.props.required : null;
         var menuItems = [];
+        if (name == "gassensor_id"){
+            menuItems.push(<option key="0" value="0">None</option>);
+        }
         for (var key in this.state.items) {
             menuItems.push(<option key={this.state.items[key].id}
                                    value={this.state.items[key].id}>{`${this.state.items[key].name ? this.state.items[key].name : this.state.items[key].model}`}</option>);
@@ -94,6 +97,62 @@ var SelectField = React.createClass({
                              required={required}
                 >
                     <option value="">{required ? this.props.label + " *" : this.props.label}</option>);
+                    {menuItems}
+                </FormControl>
+                <HelpBlock className="warning">{error}</HelpBlock>
+            </FormGroup>
+        );
+    }
+});
+
+var WindingField = React.createClass({
+    handleChange: function (e) {
+        this.props.onChange(e);
+    },
+    getInitialState: function () {
+        return {
+            items: [],
+            isVisible: false,
+            value: -1
+        };
+    },
+    isVisible: function () {
+        return this.state.isVisible;
+    },
+    componentDidMount: function () {
+        var items = [];
+        items.push("Alumminum")
+        items.push("Copper")
+        this.setState({"items" : items})
+    },
+    componentWillUnmount: function () {
+        
+    },
+    setVisible: function () {
+        this.state.isVisible = true;
+    },
+    render: function () {
+        var label = (this.props.label != null) ? this.props.label : "";
+        var value = (this.props.value != null) ? this.props.value : "";
+        var name = (this.props.name != null) ? this.props.name : "";
+        var validationState = (this.props.errors[name]) ? 'error' : null;
+        var error = this.props.errors[name];
+        var required = this.props.required ? this.props.required : null;
+        var menuItems = [];
+        
+        for (var key in this.state.items) {
+            menuItems.push(<option key={this.state.items[key]}
+                                   value={this.state.items[key]}>{`${this.state.items[key]}`}</option>);
+        }
+        return (
+            <FormGroup validationState={validationState}>
+                <ControlLabel>{label}</ControlLabel>
+                <FormControl componentClass="select"
+                             onChange={this.handleChange}
+                             value={value}
+                             name={name}
+                             required={required}
+                >
                     {menuItems}
                 </FormControl>
                 <HelpBlock className="warning">{error}</HelpBlock>
@@ -214,9 +273,7 @@ var TransformerParams = React.createClass({
                                    errors={errors}
                                    data-choice={['1', '3', '6']}/>
                     </div>
-                    <div className="col-md-2">
-                        <Checkbox name="threephase" checked={this.state.threephase} onChange={this.handleChange}><b>Three Phase</b></Checkbox>
-                    </div>
+                    
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
                                    label="Fluid Volume"
@@ -465,7 +522,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Mvar Actual"
+                                   label="MVAr Actual"
                                    name="mvaractual"
                                    value={this.state.mvaractual}
                                    errors={errors}
@@ -473,7 +530,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Reserve Mw"
+                                   label="Reserve Me"
                                    name="mwreserve"
                                    value={this.state.mwreserve}
                                    errors={errors}
@@ -489,7 +546,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Ultime Mw"
+                                   label="Ultime Me"
                                    name="mwultime"
                                    value={this.state.mwultime}
                                    errors={errors}
@@ -497,7 +554,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Ultime Mvar"
+                                   label="Ultime MVAr"
                                    name="mvarultime"
                                    value={this.state.mvarultime}
                                    errors={errors}
@@ -632,42 +689,27 @@ var TransformerParams = React.createClass({
                                    data-type="int"/>
                     </div>
                     <div className="col-md-2">
-                        <TextField onChange={this.handleChange}
-                                   label="Winding Metal 1"
+                        <WindingField onChange={this.handleChange}
+                                   label="Winding metal 1"
                                    name="winding_metal1"
                                    value={this.state.winding_metal1}
                                    errors={errors}
                                    data-type="int"/>
                     </div>
                     <div className="col-md-2">
-                        <TextField onChange={this.handleChange}
-                                   label="Winding Metal 2"
+                        <WindingField onChange={this.handleChange}
+                                   label="Winding metal 2"
                                    name="winding_metal2"
                                    value={this.state.winding_metal2}
                                    errors={errors}
                                    data-type="int"/>
                     </div>
-                    <div className="col-md-2">
-                        <TextField onChange={this.handleChange}
-                                   label="Winding Metal 3"
-                                   name="winding_metal3"
-                                   value={this.state.winding_metal3}
-                                   errors={errors}
-                                   data-type="int"/>
-                    </div>
-                    <div className="col-md-2">
-                        <TextField onChange={this.handleChange}
-                                   label="Winding Metal 4"
-                                   name="winding_metal4"
-                                   value={this.state.winding_metal4}
-                                   errors={errors}
-                                   data-type="int"/>
-                    </div>
+                    
                 </div>
                 <div className="row">
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Primary Winding Connection"
+                                   label="Delta Connection"
                                    name="primary_winding_connection"
                                    value={this.state.primary_winding_connection}
                                    errors={errors}
@@ -675,7 +717,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Secondary Winding Connection"
+                                   label="Wye Connection"
                                    name="secondary_winding_connection"
                                    value={this.state.secondary_winding_connection}
                                    errors={errors}
@@ -683,7 +725,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Tertiary Winding Connection"
+                                   label="ZigZag Connection"
                                    name="tertiary_winding_connection"
                                    value={this.state.tertiary_winding_connection}
                                    errors={errors}
@@ -691,7 +733,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Quaternary Winding Connection"
+                                   label="T (Scott) Connection"
                                    name="quaternary_winding_connection"
                                    value={this.state.quaternary_winding_connection}
                                    errors={errors}
@@ -728,7 +770,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Ltc 1"
+                                   label="LTC 1"
                                    name="ltc1"
                                    value={this.state.ltc1}
                                    errors={errors}
@@ -736,7 +778,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Ltc 2"
+                                   label="LTC 2"
                                    name="ltc2"
                                    value={this.state.ltc2}
                                    errors={errors}
@@ -778,7 +820,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-2">
                         <TextField onChange={this.handleChange}
-                                   label="Ltc 3"
+                                   label="LTC 3"
                                    name="ltc3"
                                    value={this.state.ltc3}
                                    errors={errors}

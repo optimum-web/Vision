@@ -238,5 +238,5 @@ def item_details(id):
             equipment['norm_type'] = "custom"
             equipment['norm_option_text'] = {"name" : norm['table_name'], "id" : norm['id'], "text" : norm['name']}
             break
-        
+    
     return json.dumps({'equipment':equipment, 'equipment_item':res})

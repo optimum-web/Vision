@@ -312,7 +312,7 @@ var EquipmentTestIdentificationForm = React.createClass({
                         />
                     </div>
                     <div className="col-md-2 nopadding padding-right-xs">
-                        <TextField label="Load (MVA)"
+                        <TextField label="Load (Mva)"
                                    value={data.charge}
                                    name="charge"
                                    onChange={this.props.onChange}

@@ -992,7 +992,7 @@ const EquipmentForm = React.createClass({
                     contentType: 'application/json',
                     data: JSON.stringify(fields),
                     success: function (data) {
-                        that.setState({equipmentId: data['result']});
+                        that.setState({equipmentId: data['result'], "redirect" : true});
                         that._saveSubform(subform, data['result'], path);
                         that._saveNormAdditionalParams(data['result']);
                     },
@@ -1096,6 +1096,9 @@ const EquipmentForm = React.createClass({
             //this.setState(this.getInitialState());
         }
         NotificationManager.success('Equipment has been successfully saved');
+        if (this.state['redirect'] == true){
+            window.location = "/admin/";
+        }
     },
 
     _onError: function (data) {
@@ -1610,10 +1613,10 @@ const EquipmentForm = React.createClass({
                                 <div className="col-lg-12">
                                     <FormGroup controlId="physPositionInput"
                                                validationState={this.state.errors.phys_position ? 'error' : null}>
-                                        <ControlLabel>Physical Position</ControlLabel>
+                                        <ControlLabel>LTC tap position</ControlLabel>
                                         <span className="text-danger"> *</span>
                                         <FormControl type="text"
-                                                     placeholder="Physical position"
+                                                     placeholder="LTC tap position"
                                                      ref="phys_position"
                                                      name="phys_position"
                                                      value={this.state.phys_position ? this.state.phys_position : ""}

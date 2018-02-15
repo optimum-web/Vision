@@ -510,7 +510,6 @@ transformer_schema = {
     'primary_winding_connection': type_integer_coerce_dict,
     'secondary_winding_connection': type_integer_coerce_dict,
     'tertiary_winding_connection': type_integer_coerce_dict,
-    'winding_metal1': type_integer_coerce_dict,
     'bil1': type_float_coerce_dict,
     'bil2': type_float_coerce_dict,
     'bil3': type_float_coerce_dict,
