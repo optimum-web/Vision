@@ -693,16 +693,14 @@ var TransformerParams = React.createClass({
                                    label="Winding metal 1"
                                    name="winding_metal1"
                                    value={this.state.winding_metal1}
-                                   errors={errors}
-                                   data-type="int"/>
+                                   errors={errors}/>
                     </div>
                     <div className="col-md-2">
                         <WindingField onChange={this.handleChange}
                                    label="Winding metal 2"
                                    name="winding_metal2"
                                    value={this.state.winding_metal2}
-                                   errors={errors}
-                                   data-type="int"/>
+                                   errors={errors}/>
                     </div>
                     
                 </div>

@@ -546,6 +546,8 @@ transformer_schema = {
     'ratio_tag4': type_string_maxlength_20_dict,
     'ratio_tag5': type_string_maxlength_20_dict,
     'ratio_tag6': type_string_maxlength_20_dict,
+    'winding_metal1': type_string_maxlength_20_dict,
+    'winding_metal2': type_string_maxlength_20_dict,
     'bushing_serial1_id': type_integer_coerce_dict,
     'bushing_serial2_id': type_integer_coerce_dict,
     'bushing_serial3_id': type_integer_coerce_dict,
