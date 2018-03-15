@@ -110,6 +110,7 @@ var EquipmentTypeSelectField = React.createClass({
             <div>
                 <FormGroup controlId="formControlsSelect1"
                            validationState={this.props.errors.equipment_type_id ? 'error' : null}>
+                    <ControlLabel>Equipment type</ControlLabel>
                     <FormControl
                         componentClass="select"
                         name="equipment_type_id"
@@ -770,15 +771,15 @@ var NormAdditionalParams = React.createClass({
             required/>;
 
         if (Object.keys(this.state.norm_option_text).length == 0) {
-            return (<div className="col-md-4 nopadding">{normSelectField}</div>);
+            return (<div className="col-md-3">{normSelectField}</div>);
         }
 
         switch (this.state.norm_option_text.name) {
             case 'norm_furan':
                 return (
                     <div>
-                        <div className="col-md-12 nopadding">
-                            <div className="col-md-4 nopadding">{normSelectField}</div>
+                        <div className="col-md-12 ">
+                            <div className="col-md-3 nopadding">{normSelectField}</div>
                         </div>
                         <div>
                             <NewNormFuranForm
@@ -795,8 +796,8 @@ var NormAdditionalParams = React.createClass({
             case 'norm_gas':
                 return (
                     <div>
-                        <div className="col-md-12 nopadding">
-                            <div className="col-md-4 nopadding">{normSelectField}</div>
+                        <div className="col-md-12 ">
+                            <div className="col-md-3 nopadding">{normSelectField}</div>
                         </div>
                         <div>
                             <NewNormGasForm
@@ -813,8 +814,8 @@ var NormAdditionalParams = React.createClass({
             case 'norm_isolation':
                 return (
                     <div>
-                        <div className="col-md-12 nopadding">
-                            <div className="col-md-4 nopadding">{normSelectField}</div>
+                        <div className="col-md-12 ">
+                            <div className="col-md-3 nopadding">{normSelectField}</div>
                         </div>
                         <div>
                             <NewNormIsolationForm
@@ -831,8 +832,8 @@ var NormAdditionalParams = React.createClass({
             case 'norm_physic':
                 return (
                     <div>
-                        <div className="col-md-12 nopadding">
-                            <div className="col-md-4 nopadding">{normSelectField}</div>
+                        <div className="col-md-12 ">
+                            <div className="col-md-3 nopadding">{normSelectField}</div>
                         </div>
                         <div>
                             <NewNormPhysicForm
@@ -849,8 +850,8 @@ var NormAdditionalParams = React.createClass({
             case 'particles':
                 return (
                     <div>
-                        <div className="col-md-12 nopadding">
-                            <div className="col-md-4 nopadding">{normSelectField}</div>
+                        <div className="col-md-12 ">
+                            <div className="col-md-3 nopadding">{normSelectField}</div>
                         </div>
                         <div>
                             <NewNormParticlesForm
@@ -882,7 +883,7 @@ const EquipmentForm = React.createClass({
                 'equipment_type_id',
                 'manufacturer_id',
                 'location_id',
-                'assigned_to_id',
+                //'assigned_to_id',
                 'name',
                 'serial',
                 'equipment_number',
@@ -1396,7 +1397,7 @@ const EquipmentForm = React.createClass({
                     <div>
                         <Panel header={(this.props.action == 'edit' ? "Edit Equipment": "Add Equipment")}>
                             <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
+                                <div className={(this.props.action == 'edit' ? 'col-lg-6' : 'col-lg-4')}>
                                     <EquipmentTypeSelectField
                                         source="/api/v1.0/equipment_type"
                                         value={this.state.equipment_type_id}
@@ -1406,33 +1407,14 @@ const EquipmentForm = React.createClass({
                                         required
                                     />
                                 </div>
-                                <div className={"col-md-1" + (this.props.action == 'edit' ? " collapse": "")}>
+                                <div className={"col-md-2" + (this.props.action == 'edit' ? " collapse": "")}>
                                     <a id="eq_type"
                                        className="btn btn-primary"
                                        onClick={this.onNewButtonClick}
+                                       style={{marginTop:"24px"}}
                                     >New</a>
                                 </div>
-                            </div>
-                            
-                            <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
-                                    <ManufacturerSelectField
-                                        source="/api/v1.0/manufacturer"
-                                        value={this.state.manufacturer_id}
-                                        errors={this.state.errors}
-                                        ref="manufacturer_id"
-                                    />
-                                </div>
-                                <div className={"col-md-1" + (this.props.action == 'edit' ? " collapse": "")}>
-                                    <a id="manufac"
-                                       className="btn btn-primary"
-                                       onClick={this.onNewButtonClick}
-                                    >New</a>
-                                </div>
-                            </div>
-
-                            <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
+                                <div className={(this.props.action == 'edit' ? 'col-lg-6' : 'col-lg-4')}>
                                     <LocationSelectField
                                         source="/api/v1.0/location"
                                         value={this.state.location_id}
@@ -1440,58 +1422,49 @@ const EquipmentForm = React.createClass({
                                         ref="location_id"
                                         required/>
                                 </div>
-                                <div className={"col-md-1" + (this.props.action == 'edit' ? " collapse": "")}>
+                                <div className={"col-md-2" + (this.props.action == 'edit' ? " collapse": "")}>
                                     <a id="location"
                                        className="btn btn-primary"
                                        onClick={this.onNewButtonClick}
+                                       style={{marginTop:"24px"}}
                                     >New</a>
                                 </div>
                             </div>
-
+                            
                             <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
-                                    <AssignedToSelectField
-                                        source="/api/v1.0/assigned_to"
-                                        value={this.state.assigned_to_id}
-                                        errors={this.state.errors}
-                                        ref="assigned_to_id"
-                                        required
-                                    />
+                                <div className="col-md-6">
+                                    <FormGroup validationState={this.state.errors.equipment_number ? 'error' : null}>
+                                        <ControlLabel>Equipment Number</ControlLabel>
+                                        <span className="text-danger"> *</span>
+                                        <FormControl
+                                            type="text"
+                                            placeholder="Equipment number"
+                                            name="equipment_number"
+                                            value={this.state.equipment_number ? this.state.equipment_number : ""}
+                                            data-len="50"
+                                            required
+                                        />
+                                        <HelpBlock className="warning">{this.state.errors.equipment_number}</HelpBlock>
+                                        <FormControl.Feedback />
+                                    </FormGroup>
                                 </div>
-                                <div className={"col-md-1" + (this.props.action == 'edit' ? " collapse": "")}>
-                                    <a id="assign_to"
-                                       className="btn btn-primary"
-                                       onClick={this.onNewButtonClick}
-                                    >New</a>
+                                <div className="col-md-6">
+                                    <FormGroup controlId="inputSerialField"
+                                            validationState={this.state.errors.serial ? 'error' : null}>
+                                        <ControlLabel>Serial number</ControlLabel>
+                                        <FormControl type="text"
+                                                    name="serial"
+                                                    placeholder="Serial number"
+                                                    ref="serial"
+                                                    data-len="50"
+                                                    value={this.state.serial ? this.state.serial : ""}
+                                                    />
+                                        <HelpBlock className="warning">{this.state.errors.serial}</HelpBlock>
+                                        <FormControl.Feedback />
+                                    </FormGroup>
                                 </div>
                             </div>
-
-                            <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
-                                    <NormTypeSelectField
-                                        onChange={this._onChange}
-                                        value={this.state.norm_type}
-                                        errors={this.state.errors}
-                                        ref="norm_type"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                            <div className="row">
-                                {
-                                    this.state.norm_type == 'custom' ?
-                                        <div className="col-md-12">
-                                            <NormAdditionalParams
-                                                ref='normAdditionalParams'
-                                                clearForm={this.clearForm}
-                                                getNormType={this.getNormType}
-                                                getEquipmentType={this.getEquipmentType}
-                                                setNormSubformSaved={this.setNormSubformSaved}
-                                                data={this.state}/>
-                                        </div>
-                                    : null
-                                }
-                            </div>
+                            
                             <FormGroup controlId="inputNameField"
                                        validationState={this.state.errors.name ? 'error' : null}>
                                 <ControlLabel>Equipment Name</ControlLabel>
@@ -1507,53 +1480,6 @@ const EquipmentForm = React.createClass({
                                 <FormControl.Feedback />
                             </FormGroup>
 
-                            <FormGroup validationState={this.state.errors.equipment_number ? 'error' : null}>
-                                <ControlLabel>Equipment Number</ControlLabel>
-                                <span className="text-danger"> *</span>
-                                <FormControl
-                                    type="text"
-                                    placeholder="Equipment number"
-                                    name="equipment_number"
-                                    value={this.state.equipment_number ? this.state.equipment_number : ""}
-                                    data-len="50"
-                                    required
-                                />
-                                <HelpBlock className="warning">{this.state.errors.equipment_number}</HelpBlock>
-                                <FormControl.Feedback />
-                            </FormGroup>
-
-                            <FormGroup controlId="inputSerialField"
-                                       validationState={this.state.errors.serial ? 'error' : null}>
-                                <ControlLabel>Serial number</ControlLabel>
-                                <FormControl type="text"
-                                             name="serial"
-                                             placeholder="Serial number"
-                                             ref="serial"
-                                             data-len="50"
-                                             value={this.state.serial ? this.state.serial : ""}
-                                />
-                                <HelpBlock className="warning">{this.state.errors.serial}</HelpBlock>
-                                <FormControl.Feedback />
-                            </FormGroup>
-                            <div className="row">
-                                <div className="col-lg-5">
-                                    <FrequencySelectField name="frequency"
-                                                          title="Frequency"
-                                                          ref="frequency"
-                                                          value={this.state.frequency}
-                                                          errors={this.state.errors}
-                                    />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-5">
-                                    <ManufacturedSelectField title="Manufactured"
-                                                             id="manufactured"
-                                                             value={this.state.manufactured}
-                                                             errors={this.state.errors}
-                                    />
-                                </div>
-                            </div>
                             <div className="row">
                                 <div className="col-lg-12">
                                     <FormGroup controlId="descriptionTextarea"
@@ -1589,8 +1515,74 @@ const EquipmentForm = React.createClass({
                                     </FormGroup>
                                 </div>
                             </div>
+                            {/*
                             <div className="row">
-                                <div className="col-lg-12">
+                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
+                                    <AssignedToSelectField
+                                        source="/api/v1.0/assigned_to"
+                                        value={this.state.assigned_to_id}
+                                        errors={this.state.errors}
+                                        ref="assigned_to_id"
+                                        required
+                                    />
+                                </div>
+                                <div className={"col-md-1" + (this.props.action == 'edit' ? " collapse": "")}>
+                                    <a id="assign_to"
+                                       className="btn btn-primary"
+                                       onClick={this.onNewButtonClick}
+                                    >New</a>
+                                </div>
+                            </div>
+                            */}
+
+                            
+                        </Panel>
+                        <Panel header="Technical data">
+                            <div className="row">
+                                <div className={(this.props.action == 'edit' ? 'col-lg-6' : 'col-lg-4')}>
+                                    <ManufacturerSelectField
+                                        source="/api/v1.0/manufacturer"
+                                        value={this.state.manufacturer_id}
+                                        errors={this.state.errors}
+                                        ref="manufacturer_id"
+                                    />
+                                </div>
+                                <div className={"col-md-2" + (this.props.action == 'edit' ? " collapse": "")}>
+                                    <a id="manufac"
+                                       className="btn btn-primary"
+                                       onClick={this.onNewButtonClick}
+                                       style={{marginTop:"24px"}}
+                                    >New</a>
+                                </div>
+                                <div className="col-lg-3">
+                                    <ManufacturedSelectField title="Manufactured"
+                                                             id="manufactured"
+                                                             value={this.state.manufactured}
+                                                             errors={this.state.errors}
+                                    />
+                                </div>
+                                <div className="col-lg-3">
+                                    <FrequencySelectField name="frequency"
+                                                          title="Frequency"
+                                                          ref="frequency"
+                                                          value={this.state.frequency}
+                                                          errors={this.state.errors}
+                                    />
+                                </div>
+                            </div>
+                            
+                            <div className="row">
+                                <div className='col-lg-3'>
+                                    <NormTypeSelectField
+                                        onChange={this._onChange}
+                                        value={this.state.norm_type}
+                                        errors={this.state.errors}
+                                        ref="norm_type"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="col-lg-3">
                                     <FormGroup controlId="tapChangesTextarea" ref="nr_taps"
                                                validationState={this.state.errors.nbr_of_tap_change_ltc ? 'error' : null}>
                                         <ControlLabel>Nbr of Tap Changes LTC</ControlLabel>
@@ -1608,9 +1600,8 @@ const EquipmentForm = React.createClass({
                                         <FormControl.Feedback />
                                     </FormGroup>
                                 </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-lg-12">
+                        
+                                <div className="col-lg-3">
                                     <FormGroup controlId="physPositionInput"
                                                validationState={this.state.errors.phys_position ? 'error' : null}>
                                         <ControlLabel>LTC tap position</ControlLabel>
@@ -1628,10 +1619,8 @@ const EquipmentForm = React.createClass({
                                     </FormGroup>
 
                                 </div>
-                            </div>
 
-                            <div className="row">
-                                <div className="col-lg-12">
+                                <div className="col-lg-3">
                                     <FormGroup controlId="tensionInput"
                                                validationState={this.state.errors.tension4 ? 'error' : null}>
                                         <ControlLabel>Tension</ControlLabel>
@@ -1649,8 +1638,23 @@ const EquipmentForm = React.createClass({
                                     </FormGroup>
                                 </div>
                             </div>
+
                             <div className="row">
-                                <div className={(this.props.action == 'edit' ? 'col-lg-12' : 'col-lg-11')}>
+                                {
+                                    this.state.norm_type == 'custom' ?
+                                        <NormAdditionalParams
+                                            ref='normAdditionalParams'
+                                            clearForm={this.clearForm}
+                                            getNormType={this.getNormType}
+                                            getEquipmentType={this.getEquipmentType}
+                                            setNormSubformSaved={this.setNormSubformSaved}
+                                            data={this.state}/>
+                                    : null
+                                }
+                            </div>
+
+                            <div className="row">
+                                <div className='col-lg-12'>
                                     <EqAdditionalParams
                                         data={this.state}
                                         edited={(this.state.subform && Object.keys(this.state.subform).length > 0) ? true : false}

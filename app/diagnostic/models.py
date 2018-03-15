@@ -623,11 +623,9 @@ class Transformer(db.Model):
     id = db.Column(db.Integer, primary_key=True, nullable=False)
     # FluidVolume. Quantity of insulating fluid in equipment in litre
     fluid_volume = db.Column(db.Float)
-    sealed = db.Column(db.Boolean)  # sealed. Is equipment sealed.
-    # welded_cover. Is cover welded. Important to planned work as it is much longer to remove cover
+    
     welded_cover = db.Column(db.Boolean)
     windings = db.Column(db.Integer)  # Windings. Number of windings in transformer
-    cooling_rating = db.Column(db.Integer)
     autotransformer = db.Column(db.Boolean)  # Autotransformer. True if it is
     #threephase = db.Column(db.Boolean)
 
@@ -648,10 +646,11 @@ class Transformer(db.Model):
     primary_tension = db.Column(db.Float(53))  # Volt1. Primary voltage in kV
     secondary_tension = db.Column(db.Float(53))  # Volt2. Secondary voltage in kV
     tertiary_tension = db.Column(db.Float(53))  # Volt3. Tertiary voltage in kV
+    fourth_tension = db.Column(db.Float(53))  # Volt3. Tertiary voltage in kV
 
-    based_transformer_power = db.Column(db.Float(53))  # MVA1. Based transformer power
-    first_cooling_stage_power = db.Column(db.Float(53))  # MVA2. First cooling stage power
-    second_cooling_stage_power = db.Column(db.Float(53))  # MVA3. second cooling stage power
+    #based_transformer_power = db.Column(db.Float(53))  # MVA1. Based transformer power
+    #first_cooling_stage_power = db.Column(db.Float(53))  # MVA2. First cooling stage power
+    #second_cooling_stage_power = db.Column(db.Float(53))  # MVA3. second cooling stage power
 
     equipment_id = db.Column('equipment_id', db.ForeignKey("equipment.id"))
     equipment = db.relationship('Equipment', foreign_keys='Transformer.equipment_id')
@@ -662,18 +661,25 @@ class Transformer(db.Model):
     secondary_winding_connection = db.Column(db.Integer)
     # TertConnection. Tertiary windings connection on a multi phase transformer
     tertiary_winding_connection = db.Column(db.Integer)
+    # it transformer property
+    # QuatConnection. Quaternary windings connection on a multi phase transformer
+    quaternary_winding_connection = db.Column(db.Float(53))
 
     # winding metal is a property of winding
     winding_metal1 = db.Column(db.String(30))  # WindingMetal. Copper or aluminium
     winding_metal2 = db.Column(db.String(30))  # in transformer delete winding_metal and add winding_metal2
+    winding_metal3 = db.Column(db.String(30))  # in transformer delete winding_metal and add winding_metal2
+    winding_metal4 = db.Column(db.String(30))  # in transformer delete winding_metal and add winding_metal2
     
     bil1 = db.Column(db.Float(53))  # BIL1. Primary Insulation level in kV
     bil2 = db.Column(db.Float(53))  # BIL2. Secondary Insulation level in kV
     bil3 = db.Column(db.Float(53))  # BIL3. Tertiary Insulation level in kV
-
+    bil4 = db.Column(db.Float(53))  # BIL4. Tertiary Insulation level in kV
+    # tranformer property
     static_shield1 = db.Column(db.Boolean)  # StaticShield1. true with primary electrostatic shield is present
     static_shield2 = db.Column(db.Boolean)  # StaticShield2. true with secondary electrostatic shield is present
-    static_shield3 = db.Column(db.Boolean)  # StaticShield3. true with tertiary electrostatic shield is present
+    #static_shield3 = db.Column(db.Boolean)  # StaticShield3. true with tertiary electrostatic shield is present
+    #static_shield4 = db.Column(db.Float(53))  # StaticShield4. true with tertiary electrostatic shield is present
 
     # it's transformer property
     bushing_neutral1 = db.Column(db.Float(53))
@@ -688,38 +694,40 @@ class Transformer(db.Model):
     temperature_rise = db.Column(db.Integer)  # TemperatureRise. Transformer temperature rise
 
     # it can be a property and also can be tested
-    impedance1 = db.Column(db.Float(53))  # Impedance1. Impedance at base MVA
+    #impedance1 = db.Column(db.Float(53))  # Impedance1. Impedance at base MVA
     imp_base1 = db.Column(db.Float(53))  # ImpBasedMVA1
-
-    impedance2 = db.Column(db.Float(53))  # Impedance2. Impedance at first forced cooling MVA
     imp_base2 = db.Column(db.Float(53))  # ImpBasedMVA2
+    imp_base3 = db.Column(db.Float(53))  # ImpBasedMVA2
+    imp_base4 = db.Column(db.Float(53))  # ImpBasedMVA2
+
+    #impedance2 = db.Column(db.Float(53))  # Impedance2. Impedance at first forced cooling MVA
 
     mvaforced11 = db.Column(db.Float(53))  # MVAForced11
     mvaforced12 = db.Column(db.Float(53))  # MVAForced12
     mvaforced13 = db.Column(db.Float(53))  # MVAForced13
     mvaforced14 = db.Column(db.Float(53))  # MVAForced14
-    mvaforced21 = db.Column(db.Float(53))  # MVAForced21
-    mvaforced22 = db.Column(db.Float(53))  # MVAForced22
-    mvaforced23 = db.Column(db.Float(53))  # MVAForced23
-    mvaforced24 = db.Column(db.Float(53))  # MVAForced24
+    # mvaforced21 = db.Column(db.Float(53))  # MVAForced21
+    # mvaforced22 = db.Column(db.Float(53))  # MVAForced22
+    # mvaforced23 = db.Column(db.Float(53))  # MVAForced23
+    # mvaforced24 = db.Column(db.Float(53))  # MVAForced24
 
-    impedance3 = db.Column(db.Float(53))  # Impedance3. Impedance at third forced cooling MVA
-    impbasedmva3 = db.Column(db.Float(53))  # ImpBasedMVA3
+    # impedance3 = db.Column(db.Float(53))  # Impedance3. Impedance at third forced cooling MVA
+    # impbasedmva3 = db.Column(db.Float(53))  # ImpBasedMVA3
 
-    impedance4 = db.Column(db.Float(53))  # Impedance4. Impedance at third forced cooling MVA - [ March 28, 2017 22:39 ] Michel Bélanger: in transformer add: impedance4 and impbasedmva4
-    impbasedmva4 = db.Column(db.Float(53))  # ImpBasedMVA4
-
-    # it belongs to transformer , tap voltage, it s a part of the test process
-    formula_ratio2 = db.Column(db.Integer)  # RatioFormula2. Formula used for TTR
+    # impedance4 = db.Column(db.Float(53))  # Impedance4. Impedance at third forced cooling MVA - [ March 28, 2017 22:39 ] Michel Bélanger: in transformer add: impedance4 and impbasedmva4
+    # impbasedmva4 = db.Column(db.Float(53))  # ImpBasedMVA4
 
     # it belongs to transformer , tap voltage, it s a part of the test process
-    formula_ratio = db.Column(db.Integer)  # RatioFormula. Formula used for TTR
-    ratio_tag1 = db.Column(db.String(20))  # RatioTag1. Tag use for TTR
-    ratio_tag2 = db.Column(db.String(20))  # RatioTag2. Tag use for TTR
-    ratio_tag3 = db.Column(db.String(20))  # RatioTag3. Tag use for TTR
-    ratio_tag4 = db.Column(db.String(20))  # RatioTag4. Tag use for TTR
-    ratio_tag5 = db.Column(db.String(20))  # RatioTag5. Tag use for TTR
-    ratio_tag6 = db.Column(db.String(20))  # RatioTag6. Tag use for TTR
+    # formula_ratio2 = db.Column(db.Integer)  # RatioFormula2. Formula used for TTR
+
+    # # it belongs to transformer , tap voltage, it s a part of the test process
+    # formula_ratio = db.Column(db.Integer)  # RatioFormula. Formula used for TTR
+    # ratio_tag1 = db.Column(db.String(20))  # RatioTag1. Tag use for TTR
+    # ratio_tag2 = db.Column(db.String(20))  # RatioTag2. Tag use for TTR
+    # ratio_tag3 = db.Column(db.String(20))  # RatioTag3. Tag use for TTR
+    # ratio_tag4 = db.Column(db.String(20))  # RatioTag4. Tag use for TTR
+    # ratio_tag5 = db.Column(db.String(20))  # RatioTag5. Tag use for TTR
+    # ratio_tag6 = db.Column(db.String(20))  # RatioTag6. Tag use for TTR
 
     # bushing_serial1_id = db.Column(
     #     'bushing_serial1',
@@ -813,23 +821,16 @@ class Transformer(db.Model):
     mwultime = db.Column(db.Float(53))  # MWUltima. How much MW can ultimately be used in emergency
     mvarultime = db.Column(db.Float(53))  # MVARUltima. How much MVAR can ultimately be used in emergency
 
-    # transformer device property
-    third_cooling_stage_power = db.Column(db.Float(53))  # MVA4. third cooling stage power
+    # # transformer device property
+    # third_cooling_stage_power = db.Column(db.Float(53))  # MVA4. third cooling stage power
 
-    # it transformer property
-    # QuatConnection. Quaternary windings connection on a multi phase transformer
-    quaternary_winding_connection = db.Column(db.Float(53))
-
-    # tranformer property
-    bil4 = db.Column(db.Float(53))  # BIL4. Tertiary Insulation level in kV
-    # tranformer property
-    static_shield4 = db.Column(db.Float(53))  # StaticShield4. true with tertiary electrostatic shield is present
-
-    # tranformer property
-    ratio_tag7 = db.Column(db.Float(53))  # RatioTag7. Tag use for TTR
-    ratio_tag8 = db.Column(db.Float(53))  # RatioTag8. Tag use for TTR
-    formula_ratio3 = db.Column(db.Float(53))  # RatioFormula3
-
+    # # tranformer property
+    # ratio_tag7 = db.Column(db.Float(53))  # RatioTag7. Tag use for TTR
+    # ratio_tag8 = db.Column(db.Float(53))  # RatioTag8. Tag use for TTR
+    # formula_ratio3 = db.Column(db.Float(53))  # RatioFormula3
+    cooling_type = db.Column(db.String(30))
+    cooling_stages = db.Column(db.Integer())
+    conservator_type = db.Column(db.String(30))
     def __repr__(self):
         #return "{} {} {}".format(self.__tablename__, self.name, self.serial)
         return self.__tablename__
@@ -839,10 +840,9 @@ class Transformer(db.Model):
         return {
             'id': self.id,
             'fluid_volume': self.fluid_volume,
-            'sealed': self.sealed,
             'welded_cover': self.welded_cover,
             'windings': self.windings,
-            'cooling_rating': self.cooling_rating,
+            #'cooling_rating': self.cooling_rating,
             'autotransformer': self.autotransformer,
             #'threephase': self.threephase,
             # Comment these fields out as they were commented out much more before
@@ -851,27 +851,29 @@ class Transformer(db.Model):
             # 'fluid_type': self.fluid_type and self.fluid_type.serialize(),
             # 'fluid_level_id': self.fluid_level_id,
             # 'fluid_level': self.fluid_level and self.fluid_level.serialize(),
-            'gassensor_id': self.gassensor_id,
-            'gas_sensor': self.gas_sensor and self.gas_sensor.serialize(),
+            #'gassensor_id': self.gassensor_id,
+            #'gas_sensor': self.gas_sensor and self.gas_sensor.serialize(),
             'phase_number': self.phase_number,
             #'frequency': self.frequency,
             'primary_tension': self.primary_tension,
             'secondary_tension': self.secondary_tension,
             'tertiary_tension': self.tertiary_tension,
-            'based_transformer_power': self.based_transformer_power,
-            'first_cooling_stage_power': self.first_cooling_stage_power,
-            'second_cooling_stage_power': self.second_cooling_stage_power,
+            #'based_transformer_power': self.based_transformer_power,
+            #'first_cooling_stage_power': self.first_cooling_stage_power,
+            #'second_cooling_stage_power': self.second_cooling_stage_power,
             'primary_winding_connection': self.primary_winding_connection,
             'secondary_winding_connection': self.secondary_winding_connection,
             'tertiary_winding_connection': self.tertiary_winding_connection,
             'winding_metal1': self.winding_metal1,
             'winding_metal2': self.winding_metal2,
+            'winding_metal3': self.winding_metal3,
+            'winding_metal4': self.winding_metal4,
             'bil1': self.bil1,
             'bil2': self.bil2,
             'bil3': self.bil3,
             'static_shield1': self.static_shield1,
             'static_shield2': self.static_shield2,
-            'static_shield3': self.static_shield3,
+            # 'static_shield3': self.static_shield3,
             'bushing_neutral1': self.bushing_neutral1,
             'bushing_neutral2': self.bushing_neutral2,
             'bushing_neutral3': self.bushing_neutral3,
@@ -880,30 +882,32 @@ class Transformer(db.Model):
             'ltc2': self.ltc2,
             'ltc3': self.ltc3,
             'temperature_rise': self.temperature_rise,
-            'impedance1': self.impedance1,
+            # 'impedance1': self.impedance1,
             'imp_base1': self.imp_base1,
-            'impedance2': self.impedance2,
+            # 'impedance2': self.impedance2,
             'imp_base2': self.imp_base2,
+            'imp_base3': self.imp_base3,
+            'imp_base4': self.imp_base4,
             'mvaforced11': self.mvaforced11,
             'mvaforced12': self.mvaforced12,
             'mvaforced13': self.mvaforced13,
             'mvaforced14': self.mvaforced14,
-            'mvaforced21': self.mvaforced21,
-            'mvaforced22': self.mvaforced22,
-            'mvaforced23': self.mvaforced23,
-            'mvaforced24': self.mvaforced24,
-            'impedance3': self.impedance3,
-            'impbasedmva3': self.impbasedmva3,
-            'impedance4': self.impedance4,
-            'impbasedmva4': self.impbasedmva4,
-            'formula_ratio2': self.formula_ratio2,
-            'formula_ratio': self.formula_ratio,
-            'ratio_tag1': self.ratio_tag1,
-            'ratio_tag2': self.ratio_tag2,
-            'ratio_tag3': self.ratio_tag3,
-            'ratio_tag4': self.ratio_tag4,
-            'ratio_tag5': self.ratio_tag5,
-            'ratio_tag6': self.ratio_tag6,
+            # 'mvaforced21': self.mvaforced21,
+            # 'mvaforced22': self.mvaforced22,
+            # 'mvaforced23': self.mvaforced23,
+            # 'mvaforced24': self.mvaforced24,
+            # 'impedance3': self.impedance3,
+            # 'impbasedmva3': self.impbasedmva3,
+            # 'impedance4': self.impedance4,
+            # 'impbasedmva4': self.impbasedmva4,
+            # 'formula_ratio2': self.formula_ratio2,
+            # 'formula_ratio': self.formula_ratio,
+            # 'ratio_tag1': self.ratio_tag1,
+            # 'ratio_tag2': self.ratio_tag2,
+            # 'ratio_tag3': self.ratio_tag3,
+            # 'ratio_tag4': self.ratio_tag4,
+            # 'ratio_tag5': self.ratio_tag5,
+            # 'ratio_tag6': self.ratio_tag6,
             # Comment these fields out as they were commented out much more before
             # See model fields upper
             # 'bushing_serial1_id': self.bushing_serial1_id,
@@ -930,51 +934,79 @@ class Transformer(db.Model):
             # 'bushing_serial11': self.bushing_serial11 and self.bushing_serial11.serialize(),
             # 'bushing_serial12_id': self.bushing_serial12_id,
             # 'bushing_serial12': self.bushing_serial12 and self.bushing_serial12.serialize(),
-            'mvaactual': self.mvaactual,
-            'mvaractual': self.mvaractual,
-            'mwreserve': self.mwreserve,
-            'mvarreserve': self.mvarreserve,
-            'mwultime': self.mwultime,
-            'mvarultime': self.mvarultime,
-            'third_cooling_stage_power': self.third_cooling_stage_power,
+            #'mvaactual': self.mvaactual,
+            #'mvaractual': self.mvaractual,
+            #'mwreserve': self.mwreserve,
+            #'mvarreserve': self.mvarreserve,
+            #'mwultime': self.mwultime,
+            #'mvarultime': self.mvarultime,
+            #'third_cooling_stage_power': self.third_cooling_stage_power,
             'quaternary_winding_connection': self.quaternary_winding_connection,
             'bil4': self.bil4,
-            'static_shield4': self.static_shield4,
-            'ratio_tag7': self.ratio_tag7,
-            'ratio_tag8': self.ratio_tag8,
-            'formula_ratio3': self.formula_ratio3,
+            #'static_shield4': self.static_shield4,
+            #'ratio_tag7': self.ratio_tag7,
+            #'ratio_tag8': self.ratio_tag8,
+            #'formula_ratio3': self.formula_ratio3,
             'equipment_id': self.equipment_id,
+            'cooling_type' : self.cooling_type,
+            'cooling_stages' : self.cooling_stages,
+            'conservator_type' : self.conservator_type,
+            'fourth_tension' : self.fourth_tension
         }
     def xserialize(self):
         """Return object data in easily serializeable format"""
         return [
             ("General" , [
-                ('based_transformer_power', self.based_transformer_power),
-                ('first_cooling_stage_power', self.first_cooling_stage_power),
-                ('second_cooling_stage_power', self.second_cooling_stage_power),
+                # ('based_transformer_power', self.based_transformer_power),
+                # ('first_cooling_stage_power', self.first_cooling_stage_power),
+                # ('second_cooling_stage_power', self.second_cooling_stage_power),
                 ('mvaforced12', self.mvaforced12),
                 ('primary_tension', self.primary_tension),
                 ('secondary_tension', self.secondary_tension),
                 #('threephase', self.threephase),
                 ('autotransformer', self.autotransformer),
                 ('bil1', self.bil1),
+                ('bil2', self.bil2),
+                ('bil3', self.bil3),
+                ('bil4', self.bil4),
                 ('temperature_rise', self.temperature_rise),
                 ('imp_base1', self.imp_base1),
+                ('imp_base2', self.imp_base2),
+                ('imp_base3', self.imp_base3),
+                ('imp_base4', self.imp_base4),
                 ('tertiary_tension', self.tertiary_tension),
                 #('frequency', self.frequency),
-                ('sealed', self.sealed),
+                # ('sealed', self.sealed),
                 ('winding_metal1', self.winding_metal1),
                 ('winding_metal2', self.winding_metal2),
+                ('winding_metal3', self.winding_metal3),
+                ('winding_metal4', self.winding_metal4),
                 ('ltc1', self.ltc1),
                 ('ltc2', self.ltc2),
                 ('ltc3', self.ltc3),
                 ('primary_winding_connection', self.primary_winding_connection),
                 ('secondary_winding_connection', self.secondary_winding_connection),
                 ('tertiary_winding_connection', self.tertiary_winding_connection),
+                ('quaternary_winding_connection', self.quaternary_winding_connection),
                 ('mvaforced11', self.mvaforced11),
-                ('gas_sensor', self.gas_sensor  and self.gas_sensor.serialize()),
+                ('mvaforced13', self.mvaforced13),
+                ('mvaforced14', self.mvaforced14),
+                # ('gas_sensor', self.gas_sensor  and self.gas_sensor.serialize()),
                 ('windings', self.windings),
-                ('welded_cover', self.welded_cover)
+                ('welded_cover', self.welded_cover),
+                ('cooling_type', self.cooling_type),
+                ('cooling_stages', self.cooling_stages),
+                ('conservator_type', self.conservator_type),
+                ('fourth_tension', self.fourth_tension),
+                ('bushing_neutral1', self.bushing_neutral1),
+                ('bushing_neutral2', self.bushing_neutral2),
+                ('bushing_neutral3', self.bushing_neutral3),
+                ('bushing_neutral4', self.bushing_neutral4),
+                ('fluid_volume', self.fluid_volume),
+                ('static_shield1', self.static_shield1),
+                ('static_shield2', self.static_shield2),
+                ('phase_number', self.phase_number),
+                ('windings', self.windings),
             ])
         ]
 
@@ -1634,7 +1666,7 @@ class Equipment(db.Model):
     assigned_to_id = db.Column(
         'assigned_to_id',
         db.ForeignKey("users_user.id"),
-        nullable=False
+        nullable=True
     )
     assigned_to = relationship('User', foreign_keys="Equipment.assigned_to_id")
 
