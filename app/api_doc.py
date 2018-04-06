@@ -1844,9 +1844,10 @@ to the currently logged in user or are private.
 @apiSuccess {Float}       based_transformer_power
 @apiSuccess {Float}       first_cooling_stage_power
 @apiSuccess {Float}       second_cooling_stage_power
-@apiSuccess {Integer}     primary_winding_connection
-@apiSuccess {Integer}     secondary_winding_connection
-@apiSuccess {Integer}     tertiary_winding_connection
+@apiSuccess {String}      primary_winding_connection
+@apiSuccess {String}      secondary_winding_connection
+@apiSuccess {String}      tertiary_winding_connection
+@apiSuccess {String}      quaternary_winding_connection
 @apiSuccess {Integer}     winding_metal1
 @apiSuccess {Float}       bil1
 @apiSuccess {Float}       bil2
@@ -1953,9 +1954,10 @@ to the currently logged in user or are private.
 @apiParam   {Float}       based_transformer_power
 @apiParam   {Float}       first_cooling_stage_power
 @apiParam   {Float}       second_cooling_stage_power
-@apiParam   {Integer}     primary_winding_connection
-@apiParam   {Integer}     secondary_winding_connection
-@apiParam   {Integer}     tertiary_winding_connection
+@apiParam   {String}     primary_winding_connection
+@apiParam   {String}     secondary_winding_connection
+@apiParam   {String}     tertiary_winding_connection
+@apiParam   {String}     quaternary_winding_connection
 @apiParam   {Integer}     winding_metal1
 @apiParam   {Float}       bil1
 @apiParam   {Float}       bil2

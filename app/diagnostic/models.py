@@ -656,14 +656,14 @@ class Transformer(db.Model):
     equipment = db.relationship('Equipment', foreign_keys='Transformer.equipment_id')
     # is a separate device
     # PrimConnection. Primary windings connection on a multi phase transformer
-    primary_winding_connection = db.Column(db.Integer)
+    primary_winding_connection = db.Column(db.String(30))
     # SecConnection. Secondary windings connection on a multi phase transformer
-    secondary_winding_connection = db.Column(db.Integer)
+    secondary_winding_connection = db.Column(db.String(30))
     # TertConnection. Tertiary windings connection on a multi phase transformer
-    tertiary_winding_connection = db.Column(db.Integer)
+    tertiary_winding_connection = db.Column(db.String(30))
     # it transformer property
     # QuatConnection. Quaternary windings connection on a multi phase transformer
-    quaternary_winding_connection = db.Column(db.Float(53))
+    quaternary_winding_connection = db.Column(db.String(30))
 
     # winding metal is a property of winding
     winding_metal1 = db.Column(db.String(30))  # WindingMetal. Copper or aluminium

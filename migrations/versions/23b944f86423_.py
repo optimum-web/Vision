@@ -19,7 +19,6 @@ def upgrade():
     ALTER TABLE public.equipment ALTER COLUMN assigned_to_id DROP NOT NULL;
     ALTER TABLE public.transformer ALTER COLUMN winding_metal3 TYPE character varying(20);
     ALTER TABLE public.transformer ALTER COLUMN winding_metal4 TYPE character varying(20);
-    ALTER TABLE public.transformer ALTER COLUMN phase_number TYPE INT;
 
     ALTER TABLE public.transformer ADD fourth_tension double precision;
     ALTER TABLE public.transformer ADD imp_base3 double precision;
@@ -28,6 +27,7 @@ def upgrade():
     ALTER TABLE public.transformer ADD cooling_stages INT;
     ALTER TABLE public.transformer ADD conservator_type character varying(30);
     """
+    op.execute(sql)
     pass
 
 

@@ -446,7 +446,7 @@ var TransformerParams = React.createClass({
                 <div className="row">
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="MVA 1"
+                                   label="MVA 1 (MVA)"
                                    name="mvaforced11"
                                    value={this.state.mvaforced11}
                                    errors={errors}
@@ -454,7 +454,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="MVA 2"
+                                   label="MVA 2 (MVA)"
                                    name="mvaforced12"
                                    value={this.state.mvaforced12}
                                    errors={errors}
@@ -462,7 +462,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="MVA 3"
+                                   label="MVA 3 (MVA)"
                                    name="mvaforced13"
                                    value={this.state.mvaforced13}
                                    errors={errors}
@@ -470,7 +470,7 @@ var TransformerParams = React.createClass({
                     </div>  
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="MVA 4"
+                                   label="MVA 4 (MVA)"
                                    name="mvaforced14"
                                    value={this.state.mvaforced14}
                                    errors={errors}
@@ -480,7 +480,7 @@ var TransformerParams = React.createClass({
                 <div className="row">    
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="Base Impedance 1"
+                                   label="Base Impedance 1 (%)"
                                    name="imp_base1"
                                    value={this.state.imp_base1}
                                    errors={errors}
@@ -488,7 +488,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="Base Impedance 2"
+                                   label="Base Impedance 2 (%)"
                                    name="imp_base2"
                                    value={this.state.imp_base2}
                                    errors={errors}
@@ -496,7 +496,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="Base Impedance 3"
+                                   label="Base Impedance 3 (%)"
                                    name="imp_base3"
                                    value={this.state.imp_base3}
                                    errors={errors}
@@ -504,7 +504,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="Base Impedance 4"
+                                   label="Base Impedance 4 (%)"
                                    name="imp_base4"
                                    value={this.state.imp_base4}
                                    errors={errors}
@@ -514,7 +514,7 @@ var TransformerParams = React.createClass({
                 <div className="row">  
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="BIL 1"
+                                   label="BIL 1 (kV)"
                                    name="bil1"
                                    value={this.state.bil1}
                                    errors={errors}
@@ -522,7 +522,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="BIL 2"
+                                   label="BIL 2 (kV)"
                                    name="bil2"
                                    value={this.state.bil2}
                                    errors={errors}
@@ -530,7 +530,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="BIL 3"
+                                   label="BIL 3 (kV)"
                                    name="bil3"
                                    value={this.state.bil3}
                                    errors={errors}
@@ -538,7 +538,7 @@ var TransformerParams = React.createClass({
                     </div>
                     <div className="col-md-3">
                         <TextField onChange={this.handleChange}
-                                   label="BIL 4"
+                                   label="BIL 4 (kV)"
                                    name="bil4"
                                    value={this.state.bil4}
                                    errors={errors}
@@ -577,36 +577,37 @@ var TransformerParams = React.createClass({
                 </div>  
                 <div className="row">    
                     <div className="col-md-3">
-                        <TextField onChange={this.handleChange}
-                                   label="Delta Connection"
+                        <StandartSelectField onChange={this.handleChange}
+                                   label="Connection 1"
                                    name="primary_winding_connection"
                                    value={this.state.primary_winding_connection}
                                    errors={errors}
-                                   data-type="int"/>
+                                   values={['Delta', 'Wye', 'ZigZag', 'T (Scott)']}
+                                   />
                     </div>
                     <div className="col-md-3">
-                        <TextField onChange={this.handleChange}
-                                   label="Wye Connection"
+                    <StandartSelectField onChange={this.handleChange}
+                                   label="Connection 2"
                                    name="secondary_winding_connection"
                                    value={this.state.secondary_winding_connection}
                                    errors={errors}
-                                   data-type="int"/>
+                                   values={['Delta', 'Wye', 'ZigZag', 'T (Scott)']}/>
                     </div>
                     <div className="col-md-3">
-                        <TextField onChange={this.handleChange}
-                                   label="ZigZag Connection"
+                    <StandartSelectField onChange={this.handleChange}
+                                   label="Connection 3"
                                    name="tertiary_winding_connection"
                                    value={this.state.tertiary_winding_connection}
                                    errors={errors}
-                                   data-type="int"/>
+                                   values={['Delta', 'Wye', 'ZigZag', 'T (Scott)']}/>
                     </div>
                     <div className="col-md-3">
-                        <TextField onChange={this.handleChange}
-                                   label="T (Scott) Connection"
+                    <StandartSelectField onChange={this.handleChange}
+                                   label="Connection 4"
                                    name="quaternary_winding_connection"
                                    value={this.state.quaternary_winding_connection}
                                    errors={errors}
-                                   data-type="float"/>
+                                   values={['Delta', 'Wye', 'ZigZag', 'T (Scott)']}/>
                     </div>
                 </div>  
                 <div className="row">
