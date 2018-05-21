@@ -1,0 +1,13 @@
+{% extends 'admin/model/list.html' %}
+
+{% block list_row_actions %}
+    {{ super() }}
+
+    <form class="icon" method="POST" action="/admin/transformer/action/">
+    <input id="action" name="action" value="clone_obj" type="hidden">
+    <input name="rowid" value="{{ get_pk_value(row) }}" type="hidden">
+    <button onclick="return confirm('Are you sure you want to clone selected Transformer?');" title="Clone">
+        <i class="fa fa-clone" aria-hidden="true"></i>
+    </button>
+    </form>
+{% endblock %}

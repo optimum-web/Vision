@@ -11,6 +11,11 @@ from wtforms import HiddenField
 from wtforms.fields import TextField
 from flask_admin.form import Select2Field
 from flask import g
+from sqlalchemy.inspection import inspect
+from sqlalchemy.orm import class_mapper
+from flask_admin.actions import action
+from flask import flash
+from flask.ext.babel import gettext
 
 from flask.ext.admin.contrib.sqla.ajax import QueryAjaxModelLoader
 
@@ -861,9 +866,57 @@ class GasSensorView(MyModelView):
             return login.current_user.has_role('admin') or login.current_user.has_role('group_admin') or login.current_user.has_role('group_user')
         return False
 
+def copy_sqla_object(obj, omit_fk=True):
+    """
+    Given an SQLAlchemy object, creates a new object (FOR WHICH THE OBJECT
+    MUST SUPPORT CREATION USING __init__() WITH NO PARAMETERS), and copies
+    across all attributes, omitting PKs, FKs (by default), and relationship
+    attributes.
+    """
+    cls = type(obj)
+    mapper = class_mapper(cls)
+    newobj = cls()  # not: cls.__new__(cls)
+    pk_keys = set([c.key for c in mapper.primary_key])
+    rel_keys = set([c.key for c in mapper.relationships])
+    prohibited = pk_keys | rel_keys
+    if omit_fk:
+        fk_keys = set([c.key for c in mapper.columns if c.foreign_keys])
+        prohibited = prohibited | fk_keys
+    for k in [p.key for p in mapper.iterate_properties
+              if p.key not in prohibited]:
+        try:
+            value = getattr(obj, k)
+            setattr(newobj, k, value)
+        except AttributeError:
+            pass
+    return newobj
+
 class TransformerView(MyModelView):
     can_view_details = True
     column_hide_backrefs = False
+    list_template = 'admin/diagnostic/transformer.html'
+
+    @action('clone_obj', 'Clone', 'Are you sure you want to clone ?')
+    def clone_obj(self, ids):
+        try:
+            query = Transformer.query.filter(Transformer.id.in_(ids))
+
+            count = 0
+            for transformer in query.all():
+                new_transformer = copy_sqla_object(transformer, omit_fk=False)
+                self.session.add(new_transformer)
+                self.session.commit()
+                if new_transformer.gas_sensor is not None:
+                    new_transformer.gas_sensor = copy_sqla_object(new_transformer.gas_sensor,omit_fk=False)
+                new_transformer.equipment = copy_sqla_object(new_transformer.equipment,omit_fk=False)
+                self.session.commit()
+
+            flash(gettext('Transformer was cloned'))
+        except Exception as ex:
+            if not self.handle_view_exception(ex):
+                raise
+
+            flash(gettext('Failed to clone transformer. %(error)s', error=str(ex)), 'error')
 
     column_list = (
         'id', 'fluid_type',
