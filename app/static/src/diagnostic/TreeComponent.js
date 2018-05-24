@@ -663,6 +663,33 @@ function getContextMenu(toggleGraph, loadGraph, loadInfo, loadReport) {
         }
         delete tmp.rename;
         delete tmp.ccp.submenu.copy;
+        
+        if (this.get_type(node) == "transfo") {
+            tmp.ccp.submenu.duplicate = {
+                'label': 'Duplicate'
+                , "separator_before": false    // Insert a separator before the item
+                , "separator_after": false,     // Insert a separator after the item
+                "action": function (node) {
+                    var inst = $.jstree.reference(node.reference),
+                        obj = inst.get_node(node.reference);
+                    
+                    $.authorizedAjax({
+                        url: '/admin/transformer/action/',
+                        type: 'POST',
+                        dataType: 'json',
+                        cache: false,
+                        contentType: 'application/x-www-form-urlencoded',
+                        data: "action=clone_obj&rowid=" + obj['data']['jstree']['equipment_id'] + "&no_redirect=1",
+                        success: function (data) {
+                            window.location.reload();
+                        },
+                        error: function(){
+                            inst.refresh();
+                        }
+                    })
+                    
+                }};
+        }
         return tmp;
     }
 }
@@ -672,3 +699,35 @@ function getContextMenu(toggleGraph, loadGraph, loadInfo, loadReport) {
 
 export default TreeComponent;
 
+
+function clone(obj) {
+    // Handle the 3 simple types, and null or undefined
+    if (null == obj || "object" != typeof obj) return obj;
+  
+    // Handle Date
+    if (obj instanceof Date) {
+        var date_copy = new Date();
+        date_copy.setTime(obj.getTime());
+        return date_copy;
+    }
+  
+    // Handle Array
+    if (obj instanceof Array) {
+        var a_copy = [];
+        for (var i = 0, len = obj.length; i < len; i++) {
+          a_copy[i] = clone(obj[i]);
+        }
+        return a_copy;
+    }
+  
+    // Handle Object
+    if (obj instanceof Object) {
+        var copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+        }
+        return copy;
+    }
+  
+    throw new Error("Unable to copy obj! Its type isn't supported.");
+  }

@@ -14,8 +14,9 @@ from flask import g
 from sqlalchemy.inspection import inspect
 from sqlalchemy.orm import class_mapper
 from flask_admin.actions import action
-from flask import flash
+from flask import flash, request, jsonify
 from flask.ext.babel import gettext
+from app.api_utility import Tree,TreeTranslation
 
 from flask.ext.admin.contrib.sqla.ajax import QueryAjaxModelLoader
 
@@ -899,7 +900,10 @@ class TransformerView(MyModelView):
     @action('clone_obj', 'Clone', 'Are you sure you want to clone ?')
     def clone_obj(self, ids):
         try:
-            query = Transformer.query.filter(Transformer.id.in_(ids))
+            if 'no_redirect' in request.form:
+                query = Transformer.query.filter(Transformer.equipment_id.in_(ids))
+            else:
+                query = Transformer.query.filter(Transformer.id.in_(ids))
 
             count = 0
             for transformer in query.all():
@@ -909,13 +913,27 @@ class TransformerView(MyModelView):
                 if new_transformer.gas_sensor is not None:
                     new_transformer.gas_sensor = copy_sqla_object(new_transformer.gas_sensor,omit_fk=False)
                 new_transformer.equipment = copy_sqla_object(new_transformer.equipment,omit_fk=False)
+
+                tree = Tree.query.filter(Tree.equipment_id == transformer.equipment_id).first()
+                new_tree = copy_sqla_object(tree, omit_fk=False)
+                new_tree.equipment = new_transformer.equipment
+                self.session.add(new_tree)
                 self.session.commit()
+
+                tree_translation = TreeTranslation.query.filter(TreeTranslation.id == tree.id).first()
+                new_tree_translation = copy_sqla_object(tree_translation, omit_fk=False)
+                new_tree_translation.id = new_tree.id
+                self.session.add(new_tree_translation)
+
+                self.session.commit()
+
+                if 'no_redirect' in request.form:
+                    return jsonify({'id': new_transformer.id, 'equipment_id': new_tree.equipment.id})
 
             flash(gettext('Transformer was cloned'))
         except Exception as ex:
             if not self.handle_view_exception(ex):
                 raise
-
             flash(gettext('Failed to clone transformer. %(error)s', error=str(ex)), 'error')
 
     column_list = (
